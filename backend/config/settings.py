@@ -150,6 +150,7 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 FRONTEND_DIR = BASE_DIR.parent / "frontend" / "dist"
 STATICFILES_DIRS = [FRONTEND_DIR]
+WHITENOISE_ROOT = FRONTEND_DIR
 
 STORAGES = {
     "staticfiles": {
