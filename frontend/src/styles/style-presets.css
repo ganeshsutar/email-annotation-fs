@@ -1,0 +1,118 @@
+/* ---------------------------------------------------------------------------
+ * Style Presets — CSS overrides via [data-style] + [data-slot] selectors
+ * Each style has a distinct visual personality applied through density,
+ * spacing, and border-radius adjustments on shadcn/ui data-slot components.
+ * --------------------------------------------------------------------------- */
+
+/* ==========================================================================
+ * VEGA — Classic, balanced (default)
+ * Default shadcn styling, no overrides needed.
+ * ========================================================================== */
+
+/* ==========================================================================
+ * NOVA — Compact density, slightly tighter spacing
+ * ========================================================================== */
+
+[data-style="nova"] [data-slot="card"] {
+  @apply py-4 gap-4;
+}
+
+[data-style="nova"] [data-slot="card-header"] {
+  @apply px-4 pb-0;
+}
+
+[data-style="nova"] [data-slot="card-content"] {
+  @apply px-4;
+}
+
+[data-style="nova"] [data-slot="card-footer"] {
+  @apply px-4;
+}
+
+[data-style="nova"] [data-slot="button"] {
+  @apply text-[13px];
+}
+
+[data-style="nova"] [data-slot="badge"] {
+  @apply text-[11px] px-2;
+}
+
+[data-style="nova"] [data-slot="table-header"] th {
+  @apply text-xs py-2;
+}
+
+[data-style="nova"] [data-slot="table-body"] td {
+  @apply py-2;
+}
+
+/* ==========================================================================
+ * MAIA — Bold, generous, very rounded
+ * ========================================================================== */
+
+[data-style="maia"] [data-slot="card"] {
+  @apply py-7 gap-6;
+}
+
+[data-style="maia"] [data-slot="card-header"] {
+  @apply px-7 pb-0;
+}
+
+[data-style="maia"] [data-slot="card-content"] {
+  @apply px-7;
+}
+
+[data-style="maia"] [data-slot="card-footer"] {
+  @apply px-7;
+}
+
+[data-style="maia"] [data-slot="button"] {
+  @apply font-semibold;
+}
+
+[data-style="maia"] [data-slot="badge"] {
+  @apply rounded-full px-3;
+}
+
+/* ==========================================================================
+ * LYRA — Sharp corners, compact, minimal
+ * ========================================================================== */
+
+[data-style="lyra"] [data-slot="card"] {
+  @apply py-4 gap-4;
+}
+
+[data-style="lyra"] [data-slot="card-header"] {
+  @apply px-4 pb-0;
+}
+
+[data-style="lyra"] [data-slot="card-content"] {
+  @apply px-4;
+}
+
+[data-style="lyra"] [data-slot="card-footer"] {
+  @apply px-4;
+}
+
+[data-style="lyra"] [data-slot="badge"] {
+  @apply rounded-none;
+}
+
+[data-style="lyra"] [data-slot="button"] {
+  @apply text-[13px] font-medium;
+}
+
+/* ==========================================================================
+ * MIRA — Premium, refined, medium rounded
+ * ========================================================================== */
+
+[data-style="mira"] [data-slot="card"] {
+  @apply shadow-sm;
+}
+
+[data-style="mira"] [data-slot="badge"] {
+  @apply rounded-md font-medium;
+}
+
+[data-style="mira"] [data-slot="button"] {
+  @apply font-medium tracking-tight;
+}

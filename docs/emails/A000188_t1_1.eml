@@ -1,0 +1,1187 @@
+Delivered-To: micheal.ucheh@gmail.com
+Received: by 2002:a17:522:719c:b0:5dc:2e01:b06 with SMTP id v28csp2036658pvo;
+        Sun, 1 Dec 2024 08:13:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEHO7DxVRGybCNSCbjjGz1LzfpYqYs2plscP0oEqrxzT/FPh0c3sfFcuCWv1RbWTpBk+QJf
+X-Received: by 2002:ac8:5a86:0:b0:466:a060:a484 with SMTP id d75a77b69052e-466b35264a8mr358492681cf.27.1733069604959;
+        Sun, 01 Dec 2024 08:13:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1733069604; cv=none;
+        d=google.com; s=arc-20240605;
+        b=O7nYoj74THJWBroYU+jYoD3q4fBMITXvUTlVi2mvEOPlVLbKpYVyTHpmM0ZCqjAUbe
+         QNxdAixXqbbPRN7YgEIsV5bbHitwo49t9MjLp4b1RZEXshqYOPRpkiB63bAREy0s+tVw
+         eiHesgrqVX+mm99levUwASMukGAKJfUvjnpNNBL+688MwT/lK21NETVb6DelJC6F0/wC
+         QmHN0biesX1xSLH6und+P7EuNhWmYCinHojrroYwYRmQrnJz4gHqkSMuRExG82xK0JyH
+         q9ykX0qYOSesBKBqIs8YGnPfaaaneskA0JVUI0i8f9DXDYjtAxVaP45YK54ruH1Tavem
+         sULQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:message-id:to:date:reply-to:from:subject
+         :content-transfer-encoding:mime-version:dkim-signature
+         :dkim-signature;
+        bh=r9y0gKNbN098Id1E5QPvEAACculEGb5XSK64gr7aJOk=;
+        fh=/J0xwZVbUQf1odGuyO/1BupUfjx2BpuCEdoWQG+8H6c=;
+        b=QY2mD3R9pBzGqYQthrCTlK2Yw0OnhXuCjCe8N8KLsd9Qy+gvNMAQlFc5VFmeoInd5m
+         6ktUo4pOep2JHTaKyyv5+e8rkENU1EdN5FQ8vPQ78tvjrk0TTM0wDWvqnRLonIVieuhu
+         y1FiooXntgAsa35pKdnoWb0wqsjf+0BxD9DXctVVEPihIFqRGfNxBFx+ghT2p/1XEPSN
+         556yQUd+lNuCDK318YSzrrdJ9iXBqoCBf4GFqtDo2WS9EuJ153u12vVHe+qplwVqDaXJ
+         RM/Iw27gtxcHt7SQviq63TZpE9hiJ0w6EOpI4cx2hhtayNEegaxV8n72ovyLw0FD8qiC
+         h5/A==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@yreceipts.com header.s=eg2b66oz2n4vk7ubvot2mktdhou4k4m6 header.b=y1Lq6La3;
+       dkim=pass header.i=@amazonses.com header.s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug header.b=WwBFlluq;
+       spf=pass (google.com: domain of 0100019382ff8600-c03fd3b3-fdf9-41ff-bcaa-d1a616188c8a-000000@amazonses.com designates 54.240.11.22 as permitted sender) smtp.mailfrom=0100019382ff8600-c03fd3b3-fdf9-41ff-bcaa-d1a616188c8a-000000@amazonses.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=yreceipts.com
+Return-Path: <0100019382ff8600-c03fd3b3-fdf9-41ff-bcaa-d1a616188c8a-000000@amazonses.com>
+Received: from a11-22.smtp-out.amazonses.com (a11-22.smtp-out.amazonses.com. [54.240.11.22])
+        by mx.google.com with ESMTPS id d75a77b69052e-466c4107447si95186281cf.264.2024.12.01.08.13.24
+        for <micheal.ucheh@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Dec 2024 08:13:24 -0800 (PST)
+Received-SPF: pass (google.com: domain of 0100019382ff8600-c03fd3b3-fdf9-41ff-bcaa-d1a616188c8a-000000@amazonses.com designates 54.240.11.22 as permitted sender) client-ip=54.240.11.22;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@yreceipts.com header.s=eg2b66oz2n4vk7ubvot2mktdhou4k4m6 header.b=y1Lq6La3;
+       dkim=pass header.i=@amazonses.com header.s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug header.b=WwBFlluq;
+       spf=pass (google.com: domain of 0100019382ff8600-c03fd3b3-fdf9-41ff-bcaa-d1a616188c8a-000000@amazonses.com designates 54.240.11.22 as permitted sender) smtp.mailfrom=0100019382ff8600-c03fd3b3-fdf9-41ff-bcaa-d1a616188c8a-000000@amazonses.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=yreceipts.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=eg2b66oz2n4vk7ubvot2mktdhou4k4m6; d=yreceipts.com; t=1733069604;
+	h=MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:Reply-To:Date:To:Message-ID;
+	bh=rmkMN8wh7DlmflsUp8llb8nUuNkkacOD+pO8iU9OYo4=;
+	b=y1Lq6La3bvleuUnRYlIF5JwzpRbyIFbqDAC47AqRM6LEaAIv2GbbTBDX8k8QbMLL
+	bjdhVe0ybm+miRfBQbSbbAKCLdftj3eE8X9keGzMph/8FDmIl/NK3aMofcbn5jTmAx1
+	7jLFo5BL3IHPiyWYYVq8+UVTiTeLDABJfM0q63G0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1733069604;
+	h=MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:Reply-To:Date:To:Message-ID:Feedback-ID;
+	bh=rmkMN8wh7DlmflsUp8llb8nUuNkkacOD+pO8iU9OYo4=;
+	b=WwBFlluqcGjrRLXsF3VRhbn5PBSnmPbidWhK4aYJAntah8yK8KDbX/q4Zgn/Q45f
+	ghdrnL/74P0wjtH/THc9naPfqkEcTfr4Rq6N+LmeLCvzpxTMIOt69WAc0rgjsC6/44t
+	yHLxhIfP4JINA8MzVahhCYA5aaqMVxitnWGGEmhA=
+MIME-Version: 1.0
+Content-Type: multipart/mixed; charset="utf-8";
+ boundary="===============2847370919386419278=="
+Content-Transfer-Encoding: quoted-printable
+Subject: Your Receipt from New Look Manchester - Arndale
+From: =?utf-8?b?TmV3IExvb2sgTWFuY2hlc3RlciAtIEFybmRhbGU=?= <receipt-NewLook@yreceipts.com>
+Reply-To: info@newlook.com
+Date: Sun, 1 Dec 2024 16:13:24 +0000
+To: micheal.ucheh@gmail.com
+Message-ID: <0100019382ff8600-c03fd3b3-fdf9-41ff-bcaa-d1a616188c8a-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.UYvhvLImiiTkBJ2+0k9LWdAsJZThsntjR1/ZggEKZYs=:AmazonSES
+X-SES-Outgoing: 2024.12.01-54.240.11.22
+
+--===============2847370919386419278==
+MIME-Version: 1.0
+Content-Type: multipart/alternative; charset="utf-8";
+ boundary="===============4221922314268905933=="
+Content-Transfer-Encoding: quoted-printable
+
+--===============4221922314268905933==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+
+
+
+
+Thank you for shopping at New Look Manchester - ArndaleDate of Purchase: 01=
+/12/24  16:12
+                                                Transaction Number:
+                                                    568203Salesperson: shel=
+byStore: New Look Manchester - ArndaleStore ID: 1820
+                                                            Item ID
+                                                            Description
+                                                            Price
+                                                            5045156672584
+                                                            K OP VDE BLAKE =
+SHORT
+                                                            =
+
+                                                            =C2=A347.99
+                                                        =
+
+                                                            MG16
+                                                            OW 25PCT WK35 U=
+K BM
+                                                            =
+
+                                                            -=C2=A312.00
+                                                        DiscountAmount
+                                                            You Saved
+                                                            =C2=A312.00
+                                                        Total
+                                                            =C2=A335.99
+                                                        Tender Type
+                                                        Amount
+                                                            VISA CONTACTLESS
+                                                                           =
+                                             ************4288 =
+
+                                                            =C2=A335.99
+                                                        =
+
+                                                    182003568203011224Digit=
+al Receipt Privacy Notice
+
+This privacy notice explains how New Look Retailers Limited (=E2=80=9CNew L=
+ook=E2=80=9D, =E2=80=9Cwe=E2=80=9D, =E2=80=9Cour=E2=80=9D, or =E2=80=9Cus=
+=E2=80=9D) processes your personal data when you choose a digital receipt i=
+n any of our stores.
+
+
+                                How we use your information:
+When you make a purchase in store, you have the option of choosing a paper =
+receipt or a digital receipt.If you choose to get a digital receipt, we wil=
+l ask for your email address, so we can send this digital receipt to you.
+
+
+ How long we retain your information:
+
+We will only retain personal data for as long as is necessary and as permit=
+ted by applicable laws. How long we need your personal data depends on what=
+ we are using it for, as set out in this privacy policy. We will store your=
+ data for up to 1 year after the last transaction in which a digital receip=
+t was provided for.
+
+
+ Legal basis:
+
+The legal basis we rely on to process your personal data in the manner stat=
+ed above is your consent. You can withdraw this consent at any time.
+
+
+ Your Privacy rights:
+
+You have the right to ask us for a copy of your data, to erase or rectify i=
+t, or object to, or restrict our use of it. If you do not want us to store =
+this information please let us know by e-mail at privacy@newlook.com statin=
+g your objection. The data controller is New Look Retailers Limited, Mercer=
+y Road, Weymouth, DT3 5HJ. Your data is shared with yReceipts Limited who o=
+perate our digital receipt system; they do not use it or share it for any o=
+ther purposes. If you are unhappy about how we use your data, please contac=
+t our Data Protection Officer by e-mail at privacy@newlook.com. You may als=
+o complain to the Information Commissioner=E2=80=99s Office (www.ico.org.uk=
+).For more information about how we use your personal data more generally, =
+and for more details on your rights, see the Privacy Policy  hereReturns Po=
+licy
+
+If you=E2=80=99ve changed your mind, you can return your item(s) to any New=
+ Look store in the country of purchase. To obtain a refund or exchange you=
+=E2=80=99ll need your receipt and item(s) must be returned within 28 days o=
+f purchase =E2=80=93 items must be unworn and in their original condition.S=
+ale items purchased in store are exchange only within 14 days of purchase.
+
+Refunds will be issued to the original payment method only. For purchases m=
+ade with multi-retail vouchers (i.e., Love2shop, One4all, high street / sho=
+pping centre vouchers) refunds will be credited to a New Look gift card.
+
+For hygiene reasons, this policy doesn=E2=80=99t apply to cosmetics, perfum=
+es, lingerie, face coverings and jewellery for piercings. These are non-ref=
+undable unless faulty. This does not affect your statutory rights. Please n=
+ote, this policy also excludes perishable or personalised goods that cannot=
+ be resold.
+                                For more help visit =
+
+Customer Care
+                                UK: www.newlook.com/uk/helpcentrePLEASE
+                                    NOTE SALE ITEMS - EXCHANGE ONLY
+
+
+
+
+--===============4221922314268905933==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+
+	<!doctype html>
+<html xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:v=3D"urn:schemas-microso=
+ft-com:vml"
+    xmlns:o=3D"urn:schemas-microsoft-com:office:office">
+
+<head>
+    <title>
+    </title>
+    <!--[if !mso]><!-->
+    <meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+    <!--<![endif]-->
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF-8=
+">
+    <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=
+=3D1">
+    <style type=3D"text/css">
+        #outlook a {
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+        }
+
+        p {
+            display: block;
+            margin: 13px 0;
+        }
+
+
+        .productRecommendatioin a {
+            text-decoration: none;
+        }
+
+        .productRecommendatioin .container {
+            width: 25%;
+            padding-right: 0.5em;
+        }
+
+        .productRecommendatioin .container:last-child {
+            padding-right: 0;
+        }
+
+        .productRecommendatioin p {
+            font-size: 0.8rem !important;
+            padding-bottom: 0.3em;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .productRecommendatioin .title img {
+            width: 5px;
+        }
+    </style>
+    <!--[if mso]>
+        <noscript>
+        <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+        </xml>
+        </noscript>
+        <![endif]-->
+    <!--[if lte mso 11]>
+        <style type=3D"text/css">
+          .mj-outlook-group-fix { width:100% !important; }
+        </style>
+        <![endif]-->
+    <!--[if !mso]><!-->
+    <link href=3D"https://fonts.googleapis.com/css?family=3DUbuntu:300,400,=
+500,700" rel=3D"stylesheet" type=3D"text/css">
+    <style type=3D"text/css">
+        @import url(https://fonts.googleapis.com/css?family=3DUbuntu:300,40=
+0,500,700);
+    </style>
+    <!--<![endif]-->
+    <style type=3D"text/css">
+        @media only screen and (min-width:0px) {
+            .mj-column-per-100 {
+                width: 100% !important;
+                max-width: 100%;
+            }
+        }
+    </style>
+    <style media=3D"screen and (min-width:0px)">
+        .moz-text-html .mj-column-per-100 {
+            width: 100% !important;
+            max-width: 100%;
+        }
+    </style>
+    <style type=3D"text/css">
+        @media only screen and (max-width:0px) {
+            table.mj-full-width-mobile {
+                width: 100% !important;
+            }
+
+            td.mj-full-width-mobile {
+                width: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body style=3D"word-spacing:normal;">
+    <div style=3D"">
+        <!-- HEADER/NAV -->
+        <!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" ><=
+tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;=
+"><![endif]-->
+        <div style=3D"margin:0px auto;max-width:600px;">
+            <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" style=3D"width:100%;">
+                <tbody>
+                    <tr>
+                        <td style=3D"direction:ltr;font-size:0px;padding:20=
+px 0;text-align:center;">
+                            <!--[if mso | IE]><table role=3D"presentation" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=
+=3D"vertical-align:top;width:600px;" ><![endif]-->
+                            <div class=3D"mj-column-per-100 mj-outlook-grou=
+p-fix"
+                                style=3D"font-size:0px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                <table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" role=3D"presentation"
+                                    style=3D"vertical-align:top;" width=3D"=
+100%">
+                                    <tbody>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                                    style=3D"border-collaps=
+e:collapse;border-spacing:0px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style=3D"wi=
+dth:300px;">
+                                                                <a href=3D"=
+https://www.newlook.com/uk/?extcam=3DUK_EML_TRA_DIGRECEIPT"
+                                                                    target=
+=3D"_blank">
+                                                                    <img he=
+ight=3D"auto"
+                                                                        src=
+=3D"https://email-content.newlook.com/custloads/760264384/md_1132575.jpg"
+                                                                        sty=
+le=3D"border:0;display:block;outline:none;text-decoration:none;height:auto;=
+width:100%;font-size:13px;"
+                                                                        wid=
+th=3D"300" />
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <p
+                                                    style=3D"border-top:sol=
+id 2px #1c1c1c;font-size:1px;margin:0px auto;width:100%;">
+                                                </p>
+                                                <!--[if mso | IE]><table al=
+ign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"bo=
+rder-top:solid 2px #1c1c1c;font-size:1px;margin:0px auto;width:550px;" role=
+=3D"presentation" width=3D"550px" ><tr><td style=3D"height:0;line-height:0;=
+"> &nbsp;
+</td></tr></table><![endif]-->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                                    style=3D"border-collaps=
+e:collapse;border-spacing:0px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style=3D"wi=
+dth:550px;">
+                                                                <a href=3D"=
+https://www.newlook.com/uk/?extcam=3DUK_EML_TRA_DIGRECEIPT"
+                                                                    target=
+=3D"_blank">
+                                                                    <img he=
+ight=3D"auto"
+                                                                        src=
+=3D"https://email-content.newlook.com/custloads/760264384/md_1436090.jpg"
+                                                                        sty=
+le=3D"border:0;display:block;outline:none;text-decoration:none;height:auto;=
+width:100%;font-size:13px;"
+                                                                        wid=
+th=3D"550" />
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <p
+                                                    style=3D"border-top:sol=
+id 2px #1c1c1c;font-size:1px;margin:0px auto;width:100%;">
+                                                </p>
+                                                <!--[if mso | IE]><table al=
+ign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"bo=
+rder-top:solid 2px #1c1c1c;font-size:1px;margin:0px auto;width:550px;" role=
+=3D"presentation" width=3D"550px" ><tr><td style=3D"height:0;line-height:0;=
+"> &nbsp;
+</td></tr></table><![endif]-->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <div
+                                                    style=3D"font-family:Ub=
+untu, Helvetica, Arial, sans-serif;font-size:24px;line-height:1;text-align:=
+center;color:#1c1c1c;">
+                                                    <b>Thank you for shoppi=
+ng at New Look Manchester - Arndale</b>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <p
+                                                    style=3D"border-top:sol=
+id 2px #1c1c1c;font-size:1px;margin:0px auto;width:100%;">
+                                                </p>
+                                                <!--[if mso | IE]><table al=
+ign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"bo=
+rder-top:solid 2px #1c1c1c;font-size:1px;margin:0px auto;width:550px;" role=
+=3D"presentation" width=3D"550px" ><tr><td style=3D"height:0;line-height:0;=
+"> &nbsp;
+</td></tr></table><![endif]-->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <div
+                                                    style=3D"font-family:Ub=
+untu, Helvetica, Arial, sans-serif;font-size:18px;line-height:1;text-align:=
+left;color:#1c1c1c;">
+                                                    <b>Date of Purchase</b>=
+: 01/12/24  16:12
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <div
+                                                    style=3D"font-family:Ub=
+untu, Helvetica, Arial, sans-serif;font-size:18px;line-height:1;text-align:=
+left;color:#1c1c1c;">
+                                                    <b>Transaction Number</=
+b>:
+                                                    568203</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <div
+                                                    style=3D"font-family:Ub=
+untu, Helvetica, Arial, sans-serif;font-size:18px;line-height:1;text-align:=
+left;color:#1c1c1c;">
+                                                    <b>Salesperson</b>: she=
+lby</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <div
+                                                    style=3D"font-family:Ub=
+untu, Helvetica, Arial, sans-serif;font-size:18px;line-height:1;text-align:=
+left;color:#1c1c1c;">
+                                                    <b>Store</b>: New Look =
+Manchester - Arndale</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <div
+                                                    style=3D"font-family:Ub=
+untu, Helvetica, Arial, sans-serif;font-size:18px;line-height:1;text-align:=
+left;color:#1c1c1c;">
+                                                    <b>Store ID</b>: 1820</=
+div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--[if mso | IE]></td></tr></table><![endif]-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->
+        <!-- END HEADER/NAV -->
+        <!-- SALE ITEMS -->
+        <!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" ><=
+tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;=
+"><![endif]-->
+        <div style=3D"margin:0px auto;max-width:600px;">
+            <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" style=3D"width:100%;">
+                <tbody>
+                    <tr>
+                        <td style=3D"direction:ltr;font-size:0px;padding:20=
+px 0;text-align:center;">
+                            <!--[if mso | IE]><table role=3D"presentation" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=
+=3D"vertical-align:top;width:600px;" ><![endif]-->
+                            <div class=3D"mj-column-per-100 mj-outlook-grou=
+p-fix"
+                                style=3D"font-size:0px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                <table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" role=3D"presentation"
+                                    style=3D"vertical-align:top;" width=3D"=
+100%">
+                                    <tbody>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <table cellpadding=3D"0" ce=
+llspacing=3D"0" width=3D"100%" border=3D"0"
+                                                    style=3D"color:#1c1c1c;=
+font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height=
+:22px;table-layout:auto;width:100%;border:none;">
+                                                    <tr>
+                                                        <th style=3D"text-a=
+lign: left; vertical-align: top; width: 25%;">
+                                                            Item ID</th>
+                                                        <th style=3D"text-a=
+lign: left; vertical-align: top; width: 55%;">
+                                                            Description</th>
+                                                        <th style=3D"text-a=
+lign: right; vertical-align: top; width: 20%;">
+                                                            Price</th>
+                                                    </tr>
+                                                    <mj-raw></mj-raw>
+                                                    <tr style=3D"border-top=
+: 2px solid #1c1c1c">
+                                                        <td style=3D"text-a=
+lign: left; vertical-align: top; width: 25%;">
+                                                            5045156672584</=
+td>
+                                                        <td style=3D"text-a=
+lign: left; vertical-align: top; width: 55%;">
+                                                            K OP VDE BLAKE =
+SHORT
+                                                            <mj-raw></mj-ra=
+w>
+                                                        </td>
+                                                        <td style=3D"text-a=
+lign: right; vertical-align: top; width: 20%;">
+                                                            =C2=A347.99
+                                                        </td>
+                                                    </tr>
+                                                    <mj-raw></mj-raw>
+                                                    <tr style=3D"border-top=
+: 2px solid #1c1c1c">
+                                                        <td style=3D"text-a=
+lign: left; vertical-align: top; width: 25%;">
+                                                            MG16</td>
+                                                        <td style=3D"text-a=
+lign: left; vertical-align: top; width: 55%;">
+                                                            OW 25PCT WK35 U=
+K BM
+                                                            <mj-raw></mj-ra=
+w>
+                                                        </td>
+                                                        <td style=3D"text-a=
+lign: right; vertical-align: top; width: 20%;">
+                                                            -=C2=A312.00
+                                                        </td>
+                                                    </tr>
+                                                    <mj-raw></mj-raw>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--[if mso | IE]></td></tr></table><![endif]-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->
+        <!-- END SALE ITEMS -->
+        <!-- DISCOUNTS -->        <!--[if mso | IE]><table align=3D"center"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"" style=3D"width=
+:600px;" width=3D"600" ><tr><td style=3D"line-height:0px;font-size:0px;mso-=
+line-height-rule:exactly;"><![endif]-->
+        <div style=3D"margin:0px auto;max-width:600px;">
+            <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" style=3D"width:100%;">
+                <tbody>
+                    <tr>
+                        <td style=3D"direction:ltr;font-size:0px;padding:20=
+px 0;text-align:center;">
+                            <!--[if mso | IE]><table role=3D"presentation" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=
+=3D"vertical-align:top;width:600px;" ><![endif]-->
+                            <div class=3D"mj-column-per-100 mj-outlook-grou=
+p-fix"
+                                style=3D"font-size:0px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                <table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" role=3D"presentation"
+                                    style=3D"vertical-align:top;" width=3D"=
+100%">
+                                    <tbody>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <table cellpadding=3D"0" ce=
+llspacing=3D"0" width=3D"100%" border=3D"0"
+                                                    style=3D"color:#1c1c1c;=
+font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height=
+:22px;table-layout:auto;width:100%;border:none;">
+                                                    <tr>
+                                                        <th style=3D"text-a=
+lign: left; vertical-align: top;">Discount</th>
+                                                        <th style=3D"text-a=
+lign: right; vertical-align: top;">Amount</th>
+                                                    </tr>
+                                                    <mj-raw></mj-raw>
+                                                    <tr style=3D"border-top=
+: 2px solid #1c1c1c">
+                                                        <td style=3D"text-a=
+lign: left; vertical-align: top;">
+                                                            You Saved</td>
+                                                        <td style=3D"text-a=
+lign: right; vertical-align: top;">
+                                                            =C2=A312.00
+                                                        </td>
+                                                    </tr>
+                                                    <mj-raw></mj-raw>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--[if mso | IE]></td></tr></table><![endif]-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->         <!-- END D=
+ISCOUNTS -->
+        <!-- TOTAL -->        <!--[if mso | IE]><table align=3D"center" bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"" style=3D"width:600=
+px;" width=3D"600" ><tr><td style=3D"line-height:0px;font-size:0px;mso-line=
+-height-rule:exactly;"><![endif]-->
+        <div style=3D"margin:0px auto;max-width:600px;">
+            <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" style=3D"width:100%;">
+                <tbody>
+                    <tr>
+                        <td style=3D"direction:ltr;font-size:0px;padding:20=
+px 0;text-align:center;">
+                            <!--[if mso | IE]><table role=3D"presentation" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=
+=3D"vertical-align:top;width:600px;" ><![endif]-->
+                            <div class=3D"mj-column-per-100 mj-outlook-grou=
+p-fix"
+                                style=3D"font-size:0px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                <table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" role=3D"presentation"
+                                    style=3D"vertical-align:top;" width=3D"=
+100%">
+                                    <tbody>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <p
+                                                    style=3D"border-top:sol=
+id 1px #1c1c1c;font-size:1px;margin:0px auto;width:100%;">
+                                                </p>
+                                                <!--[if mso | IE]><table al=
+ign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"bo=
+rder-top:solid 1px #1c1c1c;font-size:1px;margin:0px auto;width:550px;" role=
+=3D"presentation" width=3D"550px" ><tr><td style=3D"height:0;line-height:0;=
+"> &nbsp;
+</td></tr></table><![endif]-->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <table cellpadding=3D"0" ce=
+llspacing=3D"0" width=3D"100%" border=3D"0"
+                                                    style=3D"color:#1c1c1c;=
+font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height=
+:22px;table-layout:auto;width:100%;border:none;">
+                                                    <tr>
+                                                        <td align=3D"left">=
+<b>Total</b></td>
+                                                        <td align=3D"right">
+                                                            =C2=A335.99
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <p
+                                                    style=3D"border-top:sol=
+id 1px #1c1c1c;font-size:1px;margin:0px auto;width:100%;">
+                                                </p>
+                                                <!--[if mso | IE]><table al=
+ign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"bo=
+rder-top:solid 1px #1c1c1c;font-size:1px;margin:0px auto;width:550px;" role=
+=3D"presentation" width=3D"550px" ><tr><td style=3D"height:0;line-height:0;=
+"> &nbsp;
+</td></tr></table><![endif]-->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--[if mso | IE]></td></tr></table><![endif]-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->         <!-- END T=
+OTAL -->
+        <!-- TENDER -->        <!--[if mso | IE]><table align=3D"center" bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"" style=3D"width:60=
+0px;" width=3D"600" ><tr><td style=3D"line-height:0px;font-size:0px;mso-lin=
+e-height-rule:exactly;"><![endif]-->
+        <div style=3D"margin:0px auto;max-width:600px;">
+            <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" style=3D"width:100%;">
+                <tbody>
+                    <tr>
+                        <td style=3D"direction:ltr;font-size:0px;padding:20=
+px 0;text-align:center;">
+                            <!--[if mso | IE]><table role=3D"presentation" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=
+=3D"vertical-align:top;width:600px;" ><![endif]-->
+                            <div class=3D"mj-column-per-100 mj-outlook-grou=
+p-fix"
+                                style=3D"font-size:0px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                <table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" role=3D"presentation"
+                                    style=3D"vertical-align:top;" width=3D"=
+100%">
+                                    <tbody>
+                                        <tr>
+                                            <td align=3D"left"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <table cellpadding=3D"0" ce=
+llspacing=3D"0" width=3D"100%" border=3D"0"
+                                                    style=3D"color:#1c1c1c;=
+font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height=
+:22px;table-layout:auto;width:100%;border:none;">
+                                                    <tr>
+                                                        <th style=3D"text-a=
+lign: left; vertical-align: top;">Tender Type
+                                                        </th>
+                                                        <th style=3D"text-a=
+lign: right; vertical-align: top;">Amount</th>
+                                                    </tr>
+                                                    <mj-raw></mj-raw>
+                                                    <tr style=3D"border-top=
+: 2px solid #1c1c1c">
+                                                        <td style=3D"text-a=
+lign: left; vertical-align: top;">
+                                                            VISA CONTACTLESS
+                                                                           =
+                                             ************4288 </td>
+                                                        <td style=3D"text-a=
+lign: right; vertical-align: top;">
+                                                            =C2=A335.99
+                                                        </td>
+                                                    </tr>
+                                                    <mj-raw></mj-raw>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--[if mso | IE]></td></tr></table><![endif]-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->         <!-- END T=
+ENDER -->
+        <!-- SECOND RECEIPT TEXT
+    <mj-section>
+      <mj-column>
+        <mj-text align=3D"center">VISA CONTACTLESS =C2=A335.99<br /> =3D=3D=
+=3D CARD PAYMENT =3D=3D=3D<br /> AID:A0000000031010<br /> Visa DEBIT<br /> =
+Card: ************4288<br /> Pan Seq Nr: 00<br /> ContactLess<br /> POS.182=
+0.20241201.3.568203.1<br /> SALE<br /> Amount:<br /> GBP35.99<br /> CARDHOL=
+DER DEVICE VERIFIED<br /> Auth: 002268<br /> Ref: 032146<br /> Merchant: **=
+*48841<br /> TID: ****2003<br /> BB716BBFAA527F1D 80<br /> Date: 01/12/24 T=
+ime: 16:12:25<br /> CARDHOLDER COPY<br /> Token: 4832041051798654288<br /> =
+PLEASE RETAIN FOR YOUR RECORDS</mj-text>
+      </mj-column>
+    </mj-section>
+   END SECOND RECEIPT TEXT -->
+
+        <!-- BARCODE -->
+        <!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" ><=
+tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;=
+"><![endif]-->
+        <div style=3D"margin:0px auto;max-width:600px;">
+            <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" style=3D"width:100%;">
+                <tbody>
+                    <tr>
+                        <td style=3D"direction:ltr;font-size:0px;padding:20=
+px 0;text-align:center;">
+                            <!--[if mso | IE]><table role=3D"presentation" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=
+=3D"vertical-align:top;width:600px;" ><![endif]-->
+                            <div class=3D"mj-column-per-100 mj-outlook-grou=
+p-fix"
+                                style=3D"font-size:0px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                <table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" role=3D"presentation"
+                                    style=3D"vertical-align:top;" width=3D"=
+100%">
+                                    <tbody>
+   <tr>
+                      <td align=3D"center" style=3D"font-size:0px;padding:1=
+0px 25px;word-break:break-word;">
+                        <div style=3D"font-family:Ubuntu, Helvetica, Arial,=
+ sans-serif;font-size:13px;line-height:1;text-align:center;color:#000000;">=
+</div>
+                      </td>
+                    </tr>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                                    style=3D"border-collaps=
+e:collapse;border-spacing:0px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style=3D"wi=
+dth:300px;">
+                                                                <img height=
+=3D"auto" src=3D"https://www.yreceipts.com/receipt/barcode/ahBzfnlyZWNlaXB0=
+cy1wcm9kchQLEgdSZWNlaXB0GICAwpTfh7UKDA"
+                                                                    style=
+=3D"border:0;display:block;outline:none;text-decoration:none;height:auto;wi=
+dth:100%;font-size:13px;"
+                                                                    width=
+=3D"300" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <div
+                                                    style=3D"font-family:Ub=
+untu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:=
+center;color:#000000;">
+                                                    182003568203011224</div>
+                                            </td>
+                                        </tr>
+                                                                           =
+                                             <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <p
+                                                    style=3D"border-top:sol=
+id 2px #1c1c1c;font-size:1px;margin:0px auto;width:100%;">
+                                                </p>
+                                                <!--[if mso | IE]><table al=
+ign=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"bo=
+rder-top:solid 2px #1c1c1c;font-size:1px;margin:0px auto;width:550px;" role=
+=3D"presentation" width=3D"550px" ><tr><td style=3D"height:0;line-height:0;=
+"> &nbsp;
+</td></tr></table><![endif]-->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--[if mso | IE]></td></tr></table><![endif]-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->
+        <!-- END BARCODE -->
+
+        <!-- PRODUCT RECOMMENDATION -->
+                <!-- END PRODUCT RECOMMENDATION -->
+            <!-- UK Survey CTA -->
+        <!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" ><=
+tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;=
+"><![endif]-->
+        <div style=3D"margin:0px auto;max-width:600px;">
+            <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" style=3D"width:100%;">
+                <tbody>
+                    <tr>
+                        <td style=3D"direction:ltr;font-size:0px;padding:20=
+px 0;text-align:center;">
+                            <!--[if mso | IE]><table role=3D"presentation" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0"><tr><td class=3D"" style=
+=3D"vertical-align:top;width:600px;" ><![endif]-->
+                            <div class=3D"mj-column-per-100 mj-outlook-grou=
+p-fix"
+                                style=3D"font-size:0px;text-align:left;dire=
+ction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                <table border=3D"0" cellpadding=3D"0" cells=
+pacing=3D"0" role=3D"presentation"
+                                    style=3D"vertical-align:top;" width=3D"=
+100%">
+                                    <tbody>
+                                        <tr>
+                                            <td align=3D"center"
+                                                style=3D"font-size:0px;padd=
+ing:10px 25px;word-break:break-word;">
+                                                <table border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                                    style=3D"border-collaps=
+e:collapse;border-spacing:0px;">
+                                                    <tbody>
+                                                                           =
+                           <tr>
+                                                            <td style=3D"wi=
+dth:550px;">
+                                                                <a href=3D"=
+https://survey2.medallia.eu/?purchase-eyos&source=3D2&purchaseFlag=3D1&qrCo=
+deFlag=3D2&TRANSACTION_ID=3D568203
+&TRANSACTION_AMOUNT=3D=C2=A335.99
+&STORE_NUMBER=3Dnewlook_store_1820&NUMBER_ITEMS_PURCHASE=3D2
+&PAYMENT_METHOD=3DVISA CONTACTLESS&SALESPERSON=3Dshelby&TRANSACTION_DATE_TI=
+ME=3D2024-12-01 16:12"
+                                                                    target=
+=3D"_blank">
+                                                                    <img he=
+ight=3D"auto"
+                                                                        src=
+=3D"https://email-content.newlook.com/custloads/760264384/md_1439662.jpg"
+                                                                        sty=
+le=3D"border:0;display:block;outline:none;text-decoration:none;height:auto;=
+width:100%;font-size:13px;"
+                                                                        wid=
+th=3D"550" />
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                                           =
+                                 </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--[if mso | IE]></td></tr></table><![endif]-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->
+        <!-- END UK Survey CTA -->
+                <!-- FOOTER -->
+        <!--[if mso | IE]><table align=3D"center" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" class=3D"" style=3D"width:600px;" width=3D"600" ><=
+tr><td style=3D"line-height:0px;font-size:0px;mso-line-height-rule:exactly;=
+"><![endif]-->
+        <div style=3D"margin:0px auto;max-width:600px;">
+            <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" role=3D"presentation" style=3D"width:100%;">
+                <tbody>
+                    <tr>
+                        <td align=3D"left" style=3D"font-size:0px;padding:1=
+0px 25px;word-break:break-word;">
+                            <div
+                                style=3D"font-family:Ubuntu, Helvetica, Ari=
+al, sans-serif;font-size:13px;line-height:1;text-align:left;color:#1c1c1c;">
+                              <b>Digital Receipt Privacy Notice</b><br />
+This privacy notice explains how New Look Retailers Limited (=E2=80=9CNew L=
+ook=E2=80=9D, =E2=80=9Cwe=E2=80=9D, =E2=80=9Cour=E2=80=9D, or =E2=80=9Cus=
+=E2=80=9D) processes your personal data when you choose a digital receipt i=
+n any of our stores.<br /><br />
+                                <b>How we use your information:</b><br />Wh=
+en you make a purchase in store, you have the option of choosing a paper re=
+ceipt or a digital receipt.If you choose to get a digital receipt, we will =
+ask for your email address, so we can send this digital receipt to you.<br =
+/><br />
+ <b>How long we retain your information:</b><br />
+We will only retain personal data for as long as is necessary and as permit=
+ted by applicable laws. How long we need your personal data depends on what=
+ we are using it for, as set out in this privacy policy. We will store your=
+ data for up to 1 year after the last transaction in which a digital receip=
+t was provided for.<br /><br />
+ <b>Legal basis:</b><br />
+The legal basis we rely on to process your personal data in the manner stat=
+ed above is your consent. You can withdraw this consent at any time.<br /><=
+br />
+ <b>Your Privacy rights:</b><br />
+You have the right to ask us for a copy of your data, to erase or rectify i=
+t, or object to, or restrict our use of it. If you do not want us to store =
+this information please let us know by e-mail at privacy@newlook.com statin=
+g your objection. The data controller is New Look Retailers Limited, Mercer=
+y Road, Weymouth, DT3 5HJ. Your data is shared with yReceipts Limited who o=
+perate our digital receipt system; they do not use it or share it for any o=
+ther purposes. If you are unhappy about how we use your data, please contac=
+t our Data Protection Officer by e-mail at privacy@newlook.com. You may als=
+o complain to the Information Commissioner=E2=80=99s Office (www.ico.org.uk=
+).For more information about how we use your personal data more generally, =
+and for more details on your rights, see the Privacy Policy  <a
+                                    href=3D"https://help-uk.newlook.com/hc/=
+en-gb/articles/360018841831-Privacy"><b>here</b></a></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align=3D"left" style=3D"font-size:0px;padding:1=
+0px 25px;word-break:break-word;">
+                            <div
+                                style=3D"font-family:Ubuntu, Helvetica, Ari=
+al, sans-serif;font-size:13px;line-height:1;text-align:left;color:#1c1c1c;">
+                                <b>Returns Policy</b><br /><br />If you=E2=
+=80=99ve changed your mind, you can return your item(s) to any New Look sto=
+re in the country of purchase. To obtain a refund or exchange you=E2=80=99l=
+l need your receipt and item(s) must be returned within 28 days of purchase=
+ =E2=80=93 items must be unworn and in their original condition.Sale items =
+purchased in store are exchange only within 14 days of purchase.<br /><br /=
+>Refunds will be issued to the original payment method only. For purchases =
+made with multi-retail vouchers (i.e., Love2shop, One4all, high street / sh=
+opping centre vouchers) refunds will be credited to a New Look gift card.<b=
+r /><br />For hygiene reasons, this policy doesn=E2=80=99t apply to cosmeti=
+cs, perfumes, lingerie, face coverings and jewellery for piercings. These a=
+re non-refundable unless faulty. This does not affect your statutory rights=
+. Please note, this policy also excludes perishable or personalised goods t=
+hat cannot be resold.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align=3D"center" style=3D"font-size:0px;padding=
+:10px 25px;word-break:break-word;">
+                            <div
+                                style=3D"font-family:Ubuntu, Helvetica, Ari=
+al, sans-serif;font-size:13px;line-height:1;text-align:center;color:#1c1c1c=
+;">
+                                For more help visit <br />Customer Care
+                                UK: <a
+                                    href=3D"https://www.newlook.com/uk/help=
+centre?extcam=3DUK_EML_TRA_DIGRECEIPT">www.newlook.com/uk/helpcentre</a><br=
+ /><br /><b>PLEASE
+                                    NOTE SALE ITEMS - EXCHANGE ONLY</b><br =
+/></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->
+        <!-- END FOOTER -->
+        <!-- CTA1 =
+
+   =
+
+    <mj-section>
+      <mj-column width=3D"50%" vertical-align=3D"middle">
+        <mj-image src=3D"http://email-content.newlook.com/custloads/7602643=
+84/md_618086.jpg" />
+      </mj-column>
+      <mj-column width=3D"50%" vertical-align=3D"middle">
+        <mj-text align=3D"center" color=3D"#1c1c1c"><b>Win a =C2=A350 New L=
+ook voucher.</b><br/><br/>Simply share your in-store experience with us to =
+be in with the chance of winning. Visit newlooklistens-gbr.co.uk</mj-text>
+        <mj-button href=3D"https://www.mynewlooklistens.com/gbr" background=
+-color=3D"#FFFFFF" color=3D"#1c1c1c" border=3D"1px solid #1c1c1c">TAKE SURV=
+EY</mj-button>
+      </mj-column>
+    </mj-section>
+       END CTA1 -->
+        <!-- END SOCIAL MEDIA -->
+    </div>
+</body>
+
+</html>		<img src=3D"http://www.yreceipts.com/images/__utm.gif?utmac=3DUA-1=
+0379873-1&amp;utm_source=3Dyreceipt&amp;utm_medium=3Demail&amp;utm_content=
+=3Dyreceipt_google_analytics_gif&amp;utm_campaign=3Dyreceipt_analytics">
+	<img src=3D'https://www.yreceipts.com/businesses/advertisingahBzfnlyZWNlaX=
+B0cy1wcm9kchQLEgdSZWNlaXB0GICAwpTfh7UKDAimage.jpg?1733069595.23' alt=3D''/>
+
+<!-- r: ahBzfnlyZWNlaXB0cy1wcm9kchQLEgdSZWNlaXB0GICAwpTfh7UKDA -->
+<!-- rt: email_receipt -->
+<!-- t: ahBzfnlyZWNlaXB0cy1wcm9kcmsLEglQb3NEZXZpY2UiXGFoQnpmbmx5WldObGFYQjB=
+jeTF3Y205a2NoUUxFZ2RCWTJOdmRXNTBHSUNBa0pEYjZyMExEQSQ1NTA0MS0wOTUtMDAwMjA4NC=
+0wMzcyMiROTFVLMDE4MjBUMDAzDA -->
+<!-- yRprinter 2.94.0.0 final -->
+<!-- s: ahBzfnlyZWNlaXB0cy1wcm9kch0LEhBCdXNpbmVzc0xvY2F0aW9uGICA0OHk3OIIDA =
+-->
+<!-- ho: ahBzfnlyZWNlaXB0cy1wcm9kchQLEgdDb21wYW55GICAkJz08uMLDA -->
+<!-- rl: ahBzfnlyZWNlaXB0cy1wcm9kchoLEg1SZWNlaXB0TGF5b3V0GICApOSZ6rULDA -->
+<!-- el: ahBzfnlyZWNlaXB0cy1wcm9kch8LEhJSZWNlaXB0RW1haWxMYXlvdXQYgIDCyKqPwA=
+gM -->
+<!-- v: 876.464998083599654720 @ receipts-out.yreceipts-prod.appspot.com -->
+<!-- c: ahBzfnlyZWNlaXB0cy1wcm9kchULEghDb25zdW1lchiAgMKk08GgCAw -->
+<!-- rlid: 674c8b1a00ff00ff2989cec2e99f0001737e7972656365697074732d70726f64=
+000172656365697074732d6f75743a3837360001015c -->
+--===============4221922314268905933==--
+
+--===============2847370919386419278==--
