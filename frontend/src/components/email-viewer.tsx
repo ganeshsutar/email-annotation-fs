@@ -1,10 +1,12 @@
-import { useMemo } from "react";
-import { Paperclip } from "lucide-react";
+import { useMemo, useEffect, useRef } from "react";
+import { Paperclip, Download, FileImage, FileText, File } from "lucide-react";
 import { parseEml } from "@/lib/eml-parser";
 import type { EmailAttachment } from "@/lib/eml-parser";
 import { formatFileSize } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { SanitizedHtmlRenderer } from "@/components/sanitized-html-renderer";
 
 function getInitials(name: string): string {
   if (!name) return "?";
@@ -43,6 +45,26 @@ function formatAddresses(
   return addrs
     .map((a) => (a.name ? `${a.name} <${a.email}>` : a.email))
     .join(", ");
+}
+
+function getFileIcon(contentType: string) {
+  if (contentType.startsWith("image/")) return FileImage;
+  if (contentType.startsWith("text/") || contentType.includes("pdf"))
+    return FileText;
+  return File;
+}
+
+function downloadAttachment(att: EmailAttachment) {
+  if (!att.data) return;
+  const blob = new Blob([att.data.buffer as ArrayBuffer], { type: att.contentType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = att.filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 interface EmailViewerProps {
@@ -126,15 +148,60 @@ export function EmailViewer({ rawContent }: EmailViewerProps) {
 
       <Separator />
 
-      <div className="whitespace-pre-wrap text-sm">{email.body}</div>
+      {email.htmlBody ? (
+        <SanitizedHtmlRenderer
+          html={email.htmlBody}
+          attachments={email.attachments}
+          className="email-html-content text-sm"
+        />
+      ) : (
+        <div className="whitespace-pre-wrap text-sm">{email.body}</div>
+      )}
 
       <AttachmentsList attachments={email.attachments} />
     </div>
   );
 }
 
-export function AttachmentsList({ attachments }: { attachments: EmailAttachment[] }) {
-  if (!attachments || attachments.length === 0) return null;
+export function AttachmentsList({
+  attachments,
+}: {
+  attachments: EmailAttachment[];
+}) {
+  const blobUrlsRef = useRef<string[]>([]);
+
+  // Filter out pure inline images (they're rendered in the HTML body)
+  const downloadableAttachments = useMemo(
+    () => attachments.filter((att) => !(att.isInline && att.contentId)),
+    [attachments],
+  );
+
+  // Build thumbnail blob URLs for image attachments
+  const thumbnailUrls = useMemo(() => {
+    // Revoke old URLs before creating new ones
+    blobUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    const urls: Record<number, string> = {};
+    const newBlobUrls: string[] = [];
+    downloadableAttachments.forEach((att, i) => {
+      if (att.data && att.contentType.startsWith("image/")) {
+        const blob = new Blob([att.data.buffer as ArrayBuffer], { type: att.contentType });
+        const url = URL.createObjectURL(blob);
+        urls[i] = url;
+        newBlobUrls.push(url);
+      }
+    });
+    blobUrlsRef.current = newBlobUrls;
+    return urls;
+  }, [downloadableAttachments]);
+
+  useEffect(() => {
+    return () => {
+      blobUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
+
+  if (!downloadableAttachments || downloadableAttachments.length === 0)
+    return null;
 
   return (
     <>
@@ -143,22 +210,45 @@ export function AttachmentsList({ attachments }: { attachments: EmailAttachment[
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
           <Paperclip className="h-3.5 w-3.5" />
           <span>
-            {attachments.length} attachment{attachments.length !== 1 ? "s" : ""}
+            {downloadableAttachments.length} attachment
+            {downloadableAttachments.length !== 1 ? "s" : ""}
           </span>
         </div>
         <div className="flex flex-wrap gap-2">
-          {attachments.map((att, i) => (
-            <div
-              key={`${att.filename}-${i}`}
-              className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 px-2.5 py-1.5 text-xs"
-            >
-              <Paperclip className="h-3 w-3 text-muted-foreground shrink-0" />
-              <span className="truncate max-w-[200px]">{att.filename}</span>
-              <span className="text-muted-foreground">
-                ({formatFileSize(att.size)})
-              </span>
-            </div>
-          ))}
+          {downloadableAttachments.map((att, i) => {
+            const Icon = getFileIcon(att.contentType);
+            return (
+              <div
+                key={`${att.filename}-${i}`}
+                className="inline-flex items-center gap-2 rounded-md border bg-muted/40 px-2.5 py-1.5 text-xs"
+              >
+                {thumbnailUrls[i] ? (
+                  <img
+                    src={thumbnailUrls[i]}
+                    alt={att.filename}
+                    className="h-8 w-8 rounded object-cover shrink-0"
+                  />
+                ) : (
+                  <Icon className="h-4 w-4 text-muted-foreground shrink-0" />
+                )}
+                <span className="truncate max-w-[200px]">{att.filename}</span>
+                <span className="text-muted-foreground">
+                  ({formatFileSize(att.size)})
+                </span>
+                {att.data && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-5 w-5"
+                    onClick={() => downloadAttachment(att)}
+                    title="Download"
+                  >
+                    <Download className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </>

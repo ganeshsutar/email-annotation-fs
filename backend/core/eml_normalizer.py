@@ -168,10 +168,13 @@ def _collect_part_replacements(
         r"Content-Transfer-Encoding:\s*" + re.escape(cte.strip()),
         re.IGNORECASE,
     )
-    # Search in the region before body_start
+    # Search in the region before body_start — take the LAST match
+    # (closest to the body) to avoid hitting a parent multipart container's CTE.
     header_region_start = max(0, body_start - 500)  # headers shouldn't be more than 500 chars
     header_region = raw_content[header_region_start:body_start]
-    cte_match = cte_pattern.search(header_region)
+    cte_match = None
+    for m in cte_pattern.finditer(header_region):
+        cte_match = m
     if not cte_match:
         return
 
@@ -221,3 +224,201 @@ def _replace_cte_header(header_text: str, old_cte: str) -> str:
         re.IGNORECASE,
     )
     return pattern.sub(r"\g<1>8bit", header_text)
+
+
+# ---------------------------------------------------------------------------
+# Re-encoding: inverse of normalization
+# ---------------------------------------------------------------------------
+
+
+def _encode_payload(text: str, cte: str, charset: str) -> str | None:
+    """Encode decoded text back to base64 or quoted-printable. Inverse of _decode_payload."""
+    try:
+        if cte == "base64":
+            text_bytes = text.encode(charset, errors="replace")
+            encoded = base64.encodebytes(text_bytes).decode("ascii")
+            return encoded
+        elif cte == "quoted-printable":
+            # QP encoder expects \n line endings
+            normalized = text.replace("\r\n", "\n")
+            text_bytes = normalized.encode(charset, errors="replace")
+            encoded = quopri.encodestring(text_bytes).decode("ascii")
+            # Restore \r\n line endings (QP standard uses CRLF)
+            if "\r\n" not in encoded:
+                encoded = encoded.replace("\n", "\r\n")
+            return encoded
+        return None
+    except Exception:
+        return None
+
+
+def _restore_cte_header(header_text: str, original_cte: str) -> str:
+    """Replace Content-Transfer-Encoding: 8bit back to the original value."""
+    pattern = re.compile(
+        r"(Content-Transfer-Encoding:\s*)8bit",
+        re.IGNORECASE,
+    )
+    return pattern.sub(r"\g<1>" + original_cte, header_text)
+
+
+def re_encode_eml(deidentified_content: str, original_raw: str) -> str:
+    """
+    Re-encode text/* parts back to their original Content-Transfer-Encoding.
+
+    Mirrors normalize_eml structure but in reverse: reads the original message
+    to discover which parts had base64/QP encoding, finds the corresponding
+    decoded parts in deidentified_content, and re-encodes them.
+    """
+    msg = email.message_from_string(original_raw)
+
+    if not msg.is_multipart():
+        return _re_encode_single_part(deidentified_content, msg)
+
+    return _re_encode_multipart(deidentified_content, msg)
+
+
+def _re_encode_single_part(
+    deidentified_content: str, original_msg: email.message.Message
+) -> str:
+    """Re-encode a non-multipart message."""
+    content_type = original_msg.get_content_type() or ""
+    if not content_type.startswith("text/"):
+        return deidentified_content
+
+    cte = _get_cte(original_msg)
+    if cte not in ("base64", "quoted-printable"):
+        return deidentified_content
+
+    charset = original_msg.get_content_charset() or "utf-8"
+
+    # Find the body after the first blank line
+    sep_match = re.search(r"\r?\n\r?\n", deidentified_content)
+    if not sep_match:
+        return deidentified_content
+
+    body_start = sep_match.end()
+    decoded_body = deidentified_content[body_start:]
+
+    encoded_text = _encode_payload(decoded_body, cte, charset)
+    if encoded_text is None:
+        return deidentified_content
+
+    # Restore CTE header and body
+    headers = _restore_cte_header(deidentified_content[:body_start], cte)
+    return headers + encoded_text
+
+
+def _re_encode_multipart(
+    deidentified_content: str, original_msg: email.message.Message
+) -> str:
+    """Re-encode multipart message parts back to original CTE."""
+    replacements: list[dict] = []
+    _collect_re_encode_replacements(deidentified_content, original_msg, replacements)
+
+    if not replacements:
+        return deidentified_content
+
+    # Apply from end to start to preserve earlier offsets
+    replacements.sort(key=lambda r: r["body_start"], reverse=True)
+    result = deidentified_content
+    for rep in replacements:
+        # Replace body
+        result = result[: rep["body_start"]] + rep["encoded_text"] + result[rep["body_end"]:]
+        # Replace CTE header (comes before body, offset still valid)
+        result = (
+            result[: rep["cte_start"]]
+            + rep["cte_replacement"]
+            + result[rep["cte_end"]:]
+        )
+
+    return result
+
+
+def _collect_re_encode_replacements(
+    deidentified_content: str,
+    original_msg: email.message.Message,
+    replacements: list[dict],
+) -> None:
+    """Recursively collect re-encoding replacements for decoded text/* parts."""
+    if original_msg.is_multipart():
+        for part in original_msg.get_payload():
+            _collect_re_encode_replacements(deidentified_content, part, replacements)
+        return
+
+    content_type = original_msg.get_content_type() or ""
+    if not content_type.startswith("text/"):
+        return
+
+    cte = _get_cte(original_msg)
+    if cte not in ("base64", "quoted-printable"):
+        return
+
+    charset = original_msg.get_content_charset() or "utf-8"
+
+    # In the deidentified content, this part now has CTE: 8bit.
+    # Find the part by matching its Content-Type header value.
+    ct_value = original_msg.get("Content-Type", "")
+    if not ct_value:
+        return
+
+    # Search for this Content-Type in the deidentified content
+    ct_escaped = re.escape(ct_value.strip())
+    ct_pattern = re.compile(r"Content-Type:\s*" + ct_escaped, re.IGNORECASE)
+    ct_match = ct_pattern.search(deidentified_content)
+    if not ct_match:
+        # Try matching just the mime type + charset portion
+        ct_simple = re.escape(content_type)
+        ct_pattern = re.compile(r"Content-Type:\s*" + ct_simple, re.IGNORECASE)
+        ct_match = ct_pattern.search(deidentified_content)
+        if not ct_match:
+            return
+
+    search_start = ct_match.start()
+
+    # Find the CTE: 8bit header near this Content-Type
+    cte_pattern = re.compile(
+        r"Content-Transfer-Encoding:\s*8bit",
+        re.IGNORECASE,
+    )
+    # Search in a region after the Content-Type header
+    header_region_start = search_start
+    header_region_end = min(search_start + 500, len(deidentified_content))
+    header_region = deidentified_content[header_region_start:header_region_end]
+    cte_match = cte_pattern.search(header_region)
+    if not cte_match:
+        return
+
+    cte_abs_start = header_region_start + cte_match.start()
+    cte_abs_end = header_region_start + cte_match.end()
+
+    # Find body start: first blank line after the CTE header
+    blank_match = re.search(r"\r?\n\r?\n", deidentified_content[cte_abs_end:])
+    if not blank_match:
+        return
+    body_start = cte_abs_end + blank_match.end()
+
+    # Find body end: next MIME boundary or end of content
+    boundary_match = re.search(r"\r?\n--", deidentified_content[body_start:])
+    if boundary_match:
+        body_end = body_start + boundary_match.start()
+    else:
+        body_end = len(deidentified_content)
+
+    decoded_body = deidentified_content[body_start:body_end]
+    encoded_text = _encode_payload(decoded_body, cte, charset)
+    if encoded_text is None:
+        return
+
+    # Check for overlapping replacements
+    for existing in replacements:
+        if body_start < existing["body_end"] and body_end > existing["body_start"]:
+            return
+
+    replacements.append({
+        "body_start": body_start,
+        "body_end": body_end,
+        "encoded_text": encoded_text,
+        "cte_start": cte_abs_start,
+        "cte_end": cte_abs_end,
+        "cte_replacement": f"Content-Transfer-Encoding: {cte}",
+    })

@@ -27,6 +27,7 @@ import { EmailViewer } from "@/components/email-viewer";
 import { RawContentViewer } from "@/components/raw-content-viewer";
 import { useSetHeaderSlot } from "@/lib/header-slot";
 import { AcceptDialog } from "./accept-dialog";
+import { AnnotationActionToolbar } from "./annotation-action-toolbar";
 import { AnnotationsReviewListTab } from "./annotations-review-list-tab";
 import { EditModeControls } from "./edit-mode-controls";
 import { RejectDialog } from "./reject-dialog";
@@ -42,6 +43,8 @@ export function QAReviewWorkspace({ jobId }: QAReviewWorkspaceProps) {
   const [acceptDialogOpen, setAcceptDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [editingAnnotationId, setEditingAnnotationId] = useState<string | null>(null);
+  const [toolbarAnnotation, setToolbarAnnotation] = useState<import("@/types/models").WorkspaceAnnotation | null>(null);
+  const [toolbarPosition, setToolbarPosition] = useState({ x: 0, y: 0 });
   const [classPopupOpen, setClassPopupOpen] = useState(false);
   const [classPopupPosition, setClassPopupPosition] = useState({ x: 0, y: 0 });
   const [pendingTextSelection, setPendingTextSelection] = useState<{
@@ -201,19 +204,25 @@ export function QAReviewWorkspace({ jobId }: QAReviewWorkspaceProps) {
 
   function handleAnnotationClickInViewer(ann: import("@/types/models").WorkspaceAnnotation) {
     review.setSelectedAnnotationId(ann.id);
-    // In review mode (no edit), clicking cycles OK/flag
-    if (!review.editModeEnabled) {
-      const currentStatus = review.annotationStatuses.get(ann.id);
-      if (currentStatus === AnnotationQAStatus.PENDING || currentStatus === AnnotationQAStatus.FLAGGED) {
-        review.markOK(ann.id);
-      } else if (currentStatus === AnnotationQAStatus.OK) {
-        review.flagAnnotation(ann.id);
+    // Show the action toolbar positioned below the clicked annotation span
+    const container = document.querySelector("[data-raw-content-container]") as HTMLElement | null;
+    if (container) {
+      const span = container.querySelector(`[data-annotation-id="${ann.id}"]`);
+      if (span) {
+        const rect = span.getBoundingClientRect();
+        setToolbarPosition({ x: rect.left + rect.width / 2, y: rect.bottom + 4 });
+        setToolbarAnnotation(ann);
+        return;
       }
     }
+    // Fallback: center of screen
+    setToolbarPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    setToolbarAnnotation(ann);
   }
 
   function handleTextSelect(sel: { text: string; start: number; end: number }) {
     if (!review.editModeEnabled) return;
+    setToolbarAnnotation(null);
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
@@ -235,6 +244,10 @@ export function QAReviewWorkspace({ jobId }: QAReviewWorkspaceProps) {
       setPendingTextSelection(null);
       setClassPopupOpen(false);
     }
+  }
+
+  function handleToolbarEdit(id: string) {
+    setEditingAnnotationId(id);
   }
 
   function handleEditClassSelect(cls: import("@/types/models").AnnotationClass) {
@@ -301,6 +314,12 @@ export function QAReviewWorkspace({ jobId }: QAReviewWorkspaceProps) {
                   annotationNotes={review.annotationNotes}
                   onAnnotationClick={handleAnnotationClick}
                   onSetNote={review.setAnnotationNote}
+                  showActions={!isReadOnly}
+                  editMode={review.editModeEnabled}
+                  onMarkOK={review.markOK}
+                  onFlag={review.flagAnnotation}
+                  onEdit={handleToolbarEdit}
+                  onDelete={review.deleteAnnotation}
                 />
               </TabsContent>
               <TabsContent value="email" className="flex-1 min-h-0 m-0 overflow-auto">
@@ -317,6 +336,21 @@ export function QAReviewWorkspace({ jobId }: QAReviewWorkspaceProps) {
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
+
+      {/* Annotation action toolbar */}
+      {toolbarAnnotation && !isReadOnly && (
+        <AnnotationActionToolbar
+          annotation={toolbarAnnotation}
+          status={review.annotationStatuses.get(toolbarAnnotation.id) ?? AnnotationQAStatus.PENDING}
+          position={toolbarPosition}
+          editMode={review.editModeEnabled}
+          onMarkOK={() => review.markOK(toolbarAnnotation.id)}
+          onFlag={() => review.flagAnnotation(toolbarAnnotation.id)}
+          onEdit={() => handleToolbarEdit(toolbarAnnotation.id)}
+          onDelete={() => review.deleteAnnotation(toolbarAnnotation.id)}
+          onClose={() => setToolbarAnnotation(null)}
+        />
+      )}
 
       {/* Class selection popup for edit mode (add new annotations) */}
       {classPopupOpen && annotationClasses && (

@@ -1,11 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
+import DOMPurify from "dompurify";
 import {
   parseEml,
-  parseMultipart,
-  decodeQuotedPrintable,
-  decodeBase64,
+  buildCidMap,
+  replaceCidReferences,
 } from "@/lib/eml-parser";
-import type { MimePart } from "@/lib/eml-parser";
 import type { WorkspaceAnnotation } from "@/types/models";
 import { deidentify } from "@/lib/deidentify";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -64,24 +63,46 @@ export function EmailPreview({ rawContent, annotations }: EmailPreviewProps) {
 /** Original preview — used when no annotations are present */
 function OriginalEmailPreview({ rawContent }: { rawContent: string }) {
   const email = useMemo(() => parseEml(rawContent), [rawContent]);
+  const cidMapRef = useRef<{ cleanup: () => void } | null>(null);
 
-  if (email.isHtml) {
-    const htmlContent = getOriginalHtmlBody(rawContent);
-    if (htmlContent) {
-      return (
-        <div className="flex flex-col h-full">
-          <iframe
-            srcDoc={htmlContent}
-            sandbox=""
-            className="w-full flex-1 border-0 min-h-[400px]"
-            title="Email preview"
-          />
-          <div className="px-4 pb-4">
-            <AttachmentsList attachments={email.attachments} />
-          </div>
+  const iframeSrcDoc = useMemo(() => {
+    if (!email.htmlBody) return null;
+
+    const cidMap = buildCidMap(email.attachments);
+    // Cleanup previous blob URLs
+    cidMapRef.current?.cleanup();
+    cidMapRef.current = cidMap;
+
+    const withCids = replaceCidReferences(email.htmlBody, cidMap.urls);
+    return DOMPurify.sanitize(withCids, {
+      USE_PROFILES: { html: true },
+      ADD_TAGS: ["style"],
+      WHOLE_DOCUMENT: true,
+      ALLOWED_URI_REGEXP: /^(?:blob:|data:|https?:|mailto:)/i,
+    });
+  }, [email.htmlBody, email.attachments]);
+
+  useEffect(() => {
+    return () => {
+      cidMapRef.current?.cleanup();
+      cidMapRef.current = null;
+    };
+  }, []);
+
+  if (iframeSrcDoc) {
+    return (
+      <div className="flex flex-col h-full">
+        <iframe
+          srcDoc={iframeSrcDoc}
+          sandbox="allow-same-origin"
+          className="w-full flex-1 border-0 min-h-[400px]"
+          title="Email preview"
+        />
+        <div className="px-4 pb-4">
+          <AttachmentsList attachments={email.attachments} />
         </div>
-      );
-    }
+      </div>
+    );
   }
 
   return (
@@ -116,62 +137,4 @@ function DeidentifiedTextView({ content }: { content: string }) {
       </div>
     </ScrollArea>
   );
-}
-
-function findHtmlPart(parts: MimePart[]): MimePart | null {
-  for (const part of parts) {
-    const ct = (part.headers["content-type"] || "").toLowerCase();
-    if (ct.includes("multipart/")) {
-      const nestedBoundary = ct.match(/boundary="?([^";\s]+)"?/i);
-      if (nestedBoundary) {
-        const nestedParts = parseMultipart(part.body, nestedBoundary[1]);
-        const found = findHtmlPart(nestedParts);
-        if (found) return found;
-      }
-    } else if (ct.includes("text/html")) {
-      return part;
-    }
-  }
-  return null;
-}
-
-function decodePartBody(part: MimePart): string {
-  const enc = (part.headers["content-transfer-encoding"] || "").toLowerCase();
-  if (enc === "base64") return decodeBase64(part.body);
-  if (enc === "quoted-printable") return decodeQuotedPrintable(part.body);
-  return part.body;
-}
-
-function getOriginalHtmlBody(rawContent: string): string | null {
-  const splitMatch = rawContent.match(/^([\s\S]*?)\r?\n\r?\n([\s\S]*)$/);
-  if (!splitMatch) return null;
-
-  const headerSection = splitMatch[1];
-  const bodySection = splitMatch[2];
-
-  const unfoldedHeaders = headerSection.replace(/\r?\n[ \t]+/g, " ");
-  const headers: Record<string, string> = {};
-  for (const line of unfoldedHeaders.split(/\r?\n/)) {
-    const colonIdx = line.indexOf(":");
-    if (colonIdx > 0) {
-      const key = line.substring(0, colonIdx).trim().toLowerCase();
-      headers[key] = line.substring(colonIdx + 1).trim();
-    }
-  }
-
-  const contentType = headers["content-type"] || "";
-  const boundaryMatch = contentType.match(/boundary="?([^";\s]+)"?/i);
-
-  if (boundaryMatch) {
-    const parts = parseMultipart(bodySection, boundaryMatch[1]);
-    const htmlPart = findHtmlPart(parts);
-    if (htmlPart) return decodePartBody(htmlPart);
-  } else if (contentType.toLowerCase().includes("text/html")) {
-    const enc = (headers["content-transfer-encoding"] || "").toLowerCase();
-    if (enc === "base64") return decodeBase64(bodySection);
-    if (enc === "quoted-printable") return decodeQuotedPrintable(bodySection);
-    return bodySection;
-  }
-
-  return null;
 }

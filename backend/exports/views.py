@@ -14,7 +14,7 @@ from rest_framework.viewsets import ViewSet
 
 from annotations.models import Annotation, AnnotationVersion
 from annotations.serializers import AnnotationSerializer
-from core.eml_normalizer import normalize_eml
+from core.eml_normalizer import normalize_eml, re_encode_eml
 from core.permissions import IsAdmin
 from datasets.models import Dataset, Job
 
@@ -251,7 +251,7 @@ class ExportViewSet(ViewSet):
                 if not job.eml_content:
                     continue
 
-                normalized, _ = normalize_eml(job.eml_content)
+                normalized, has_encoded = normalize_eml(job.eml_content)
 
                 latest_version = (
                     job.annotation_versions.order_by("-version_number").first()
@@ -265,6 +265,9 @@ class ExportViewSet(ViewSet):
                     deidentified = self._deidentify(normalized, annotations)
                 else:
                     deidentified = normalized
+
+                if has_encoded:
+                    deidentified = re_encode_eml(deidentified, job.eml_content)
 
                 short_id = str(job.id)[:8]
                 out_name = f"REDACTED_{short_id}_{job.file_name}"

@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
-import { Check, Flag, Plus, X } from "lucide-react";
+import { Check, Flag, Pencil, Plus, Trash2, X } from "lucide-react";
 import type { WorkspaceAnnotation } from "@/types/models";
 import { AnnotationQAStatus } from "@/types/enums";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -26,6 +27,12 @@ interface AnnotationsReviewListTabProps {
   annotationNotes: Map<string, string>;
   onAnnotationClick: (id: string) => void;
   onSetNote: (id: string, note: string) => void;
+  showActions?: boolean;
+  editMode?: boolean;
+  onMarkOK?: (id: string) => void;
+  onFlag?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
 const statusIcons: Record<AnnotationQAStatus, React.ReactNode> = {
@@ -50,6 +57,12 @@ export function AnnotationsReviewListTab({
   annotationNotes,
   onAnnotationClick,
   onSetNote,
+  showActions,
+  editMode,
+  onMarkOK,
+  onFlag,
+  onEdit,
+  onDelete,
 }: AnnotationsReviewListTabProps) {
   const [filter, setFilter] = useState("all");
 
@@ -108,13 +121,14 @@ export function AnnotationsReviewListTab({
               <TableHead className="w-28">Class</TableHead>
               <TableHead>Text</TableHead>
               <TableHead className="w-32">Note</TableHead>
+              {showActions && <TableHead className="w-28">Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={5}
+                  colSpan={showActions ? 6 : 5}
                   className="text-center text-muted-foreground py-8"
                 >
                   No annotations match filter
@@ -161,6 +175,54 @@ export function AnnotationsReviewListTab({
                         onChange={(e) => onSetNote(ann.id, e.target.value)}
                       />
                     </TableCell>
+                    {showActions && (
+                      <TableCell onClick={(e) => e.stopPropagation()}>
+                        <div className="flex gap-0.5">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 text-green-600 hover:text-green-700 hover:bg-green-50"
+                            disabled={status === AnnotationQAStatus.OK}
+                            onClick={() => onMarkOK?.(ann.id)}
+                            title="Mark OK"
+                          >
+                            <Check className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50"
+                            disabled={status === AnnotationQAStatus.FLAGGED}
+                            onClick={() => onFlag?.(ann.id)}
+                            title="Flag"
+                          >
+                            <Flag className="h-3 w-3" />
+                          </Button>
+                          {editMode && (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => onEdit?.(ann.id)}
+                                title="Change class"
+                              >
+                                <Pencil className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 text-destructive hover:text-destructive"
+                                onClick={() => onDelete?.(ann.id)}
+                                title="Delete"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
+                    )}
                   </TableRow>
                 );
               })
