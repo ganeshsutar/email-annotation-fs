@@ -28,7 +28,7 @@ The Admin landing page providing a high-level overview of platform activity. Dis
   - Users
   - Job Assignment
   - Export
-  - Settings (blind review toggle)
+  - Settings (blind review toggle, min annotation length)
 - Current user display (name, role badge) at bottom
 - Sign Out button
 

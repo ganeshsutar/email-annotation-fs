@@ -131,7 +131,7 @@ export function RawContentViewer({
   );
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col" data-testid="raw-content-viewer">
       {hasEncodedParts && contentViewMode && onContentViewModeChange && (
         <div className="flex items-center gap-2 border-b px-3 py-1.5 bg-muted/30">
           <span className="text-xs text-muted-foreground">View:</span>

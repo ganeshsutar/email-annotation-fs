@@ -46,7 +46,7 @@ function AnnotatorDashboardPage() {
   }
 
   return (
-    <div className="space-y-4 p-6">
+    <div className="space-y-4 p-6" data-testid="annotator-dashboard">
       <h1 className="text-xl font-bold tracking-tight lg:text-2xl">My Annotation Jobs</h1>
 
       {data && (
@@ -63,7 +63,7 @@ function AnnotatorDashboardPage() {
         >
           <TabsList>
             {statusTabs.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value}>
+              <TabsTrigger key={tab.value} value={tab.value} data-testid={`status-tab-${tab.label.toLowerCase().replace(/\s+/g, "-")}`}>
                 {tab.label}
               </TabsTrigger>
             ))}
@@ -78,6 +78,7 @@ function AnnotatorDashboardPage() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9"
+              data-testid="jobs-search"
             />
           </div>
           <Button type="submit" variant="secondary">
@@ -95,16 +96,18 @@ function AnnotatorDashboardPage() {
           <div className="rounded-lg border">
             <MyJobsTable jobs={data.results} />
           </div>
-          <DataTablePagination
-            page={page}
-            pageSize={pageSize}
-            totalCount={data.count}
-            onPageChange={setPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setPage(1);
-            }}
-          />
+          <div data-testid="jobs-pagination">
+            <DataTablePagination
+              page={page}
+              pageSize={pageSize}
+              totalCount={data.count}
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
         </>
       ) : null}
     </div>

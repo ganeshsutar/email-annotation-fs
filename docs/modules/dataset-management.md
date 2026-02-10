@@ -77,9 +77,10 @@ Extraction logic:
   ├─ Validates archive (rejects if no .eml files)
   ├─ For each .eml file:
   │     ├─ Reads raw content as string
-  │     ├─ Stores raw .eml to MEDIA_ROOT: datasets/{datasetId}/{filename}
+  │     ├─ Compresses content with zlib, computes SHA-256 content_hash
+  │     ├─ Checks for duplicates (intra-ZIP + global DB)
   │     └─ Creates Job record:
-  │           { dataset_id, file_name, file_path, status: UPLOADED }
+  │           { dataset_id, file_name, eml_content_compressed, content_hash, status: UPLOADED }
   ├─ Updates Dataset: { status: READY, file_count: N }
   └─ On error: Updates Dataset: { status: ERROR, error_message }
         │
@@ -89,6 +90,17 @@ Frontend polls for dataset status via GET /api/datasets/{id}/status/
         ▼
 DatasetUploadDialog shows completion or error
 ```
+
+### Deduplication
+
+The upload pipeline applies two-phase deduplication using SHA-256 content hashes:
+
+1. **Intra-ZIP dedup**: Within a single uploaded archive, if multiple `.eml` files have identical content (same SHA-256 hash), only the first is stored as a Job. Subsequent duplicates are skipped.
+2. **Global dedup**: Each `.eml` file's content hash is checked against all existing Jobs in the database. Files that already exist in any dataset are skipped.
+
+Dedup metadata:
+- `Job.content_hash` — SHA-256 digest of the raw `.eml` content, indexed for fast lookups.
+- `Dataset.duplicate_count` — number of files skipped during extraction (both intra-ZIP and global duplicates).
 
 ### Deletion Flow
 ```
@@ -187,7 +199,7 @@ interface Dataset {
   uploadDate: string;
   fileCount: number;
   status: 'PROCESSING' | 'READY' | 'ERROR';
-  filePath: string;
+  duplicateCount: number;
   errorMessage?: string;
 }
 

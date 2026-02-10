@@ -10,8 +10,9 @@ export function useStartAnnotation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: startAnnotation,
-    onSuccess: () => {
+    onSuccess: (_data, jobId) => {
       queryClient.invalidateQueries({ queryKey: ["annotations", "my-jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["annotations", "job", jobId] });
       toast.success("Annotation started");
     },
   });

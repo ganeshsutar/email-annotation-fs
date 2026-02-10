@@ -85,6 +85,7 @@ export function ClassSelectionPopup({
         ref={containerRef}
         style={style}
         className="w-64 rounded-lg border bg-popover text-popover-foreground shadow-lg ring-1 ring-border/50"
+        data-testid="class-selection-popup"
         onKeyDown={handleKeyDown}
       >
         <div className="p-2 border-b">
@@ -95,6 +96,7 @@ export function ClassSelectionPopup({
             placeholder="Search classes..."
             className="h-8 text-sm"
             aria-label="Search annotation classes"
+            data-testid="class-search-input"
           />
         </div>
         <div className="max-h-60 overflow-y-auto">
@@ -107,6 +109,7 @@ export function ClassSelectionPopup({
               {filtered.map((cls, idx) => (
                 <button
                   key={cls.id}
+                  data-testid="class-option"
                   ref={(el) => {
                     if (el) itemRefs.current.set(idx, el);
                     else itemRefs.current.delete(idx);

@@ -25,7 +25,7 @@ interface UsersTableProps {
 
 export function UsersTable({ users, onEdit }: UsersTableProps) {
   return (
-    <Table>
+    <Table data-testid="users-table">
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
@@ -39,7 +39,7 @@ export function UsersTable({ users, onEdit }: UsersTableProps) {
       <TableBody>
         {users.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={6} className="h-24 text-center">
+            <TableCell colSpan={6} className="h-24 text-center" data-testid="users-empty-state">
               No users found.
             </TableCell>
           </TableRow>
@@ -73,6 +73,7 @@ export function UsersTable({ users, onEdit }: UsersTableProps) {
                   variant="ghost"
                   size="icon"
                   onClick={() => onEdit(user)}
+                  data-testid="user-edit-button"
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>

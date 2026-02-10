@@ -75,10 +75,10 @@ function DatasetsPage() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="datasets-page">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight lg:text-2xl">Datasets</h1>
-        <Button onClick={() => setUploadOpen(true)}>
+        <Button onClick={() => setUploadOpen(true)} data-testid="upload-dataset-button">
           <Plus className="mr-2 h-4 w-4" />
           Upload Dataset
         </Button>
@@ -90,6 +90,7 @@ function DatasetsPage() {
           value={localSearch}
           onChange={(e) => setLocalSearch(e.target.value)}
           className="max-w-sm"
+          data-testid="datasets-search"
         />
         {selectedIds.size > 0 && (
           <Button
@@ -113,7 +114,7 @@ function DatasetsPage() {
         </div>
       ) : (
         <>
-          <div className="rounded-lg border">
+          <div className="rounded-lg border" data-testid="datasets-table">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -134,7 +135,7 @@ function DatasetsPage() {
               <TableBody>
                 {datasets.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-24 text-center">
+                    <TableCell colSpan={7} className="h-24 text-center" data-testid="datasets-empty-state">
                       No datasets found.
                     </TableCell>
                   </TableRow>
@@ -174,6 +175,7 @@ function DatasetsPage() {
                           size="sm"
                           className="text-destructive"
                           onClick={() => setDeleteTarget(dataset)}
+                          data-testid="dataset-delete-button"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -185,16 +187,18 @@ function DatasetsPage() {
             </Table>
           </div>
 
-          <DataTablePagination
-            page={page}
-            pageSize={pageSize}
-            totalCount={data?.count ?? 0}
-            onPageChange={setPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setPage(1);
-            }}
-          />
+          <div data-testid="datasets-pagination">
+            <DataTablePagination
+              page={page}
+              pageSize={pageSize}
+              totalCount={data?.count ?? 0}
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
         </>
       )}
 

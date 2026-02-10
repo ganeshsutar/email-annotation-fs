@@ -57,7 +57,7 @@ export function FileDropZone({
 
   if (file) {
     return (
-      <div className="flex items-center justify-between rounded-lg border border-dashed p-4">
+      <div className="flex items-center justify-between rounded-lg border border-dashed p-4" data-testid="file-drop-zone">
         <div className="flex items-center gap-3">
           <Upload className="h-5 w-5 text-muted-foreground" />
           <div>
@@ -85,6 +85,7 @@ export function FileDropZone({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      data-testid="file-drop-zone"
       className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${
         isDragging
           ? "border-primary bg-primary/5"

@@ -170,6 +170,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Custom user model
 AUTH_USER_MODEL = "accounts.User"
 
+# Allow inactive users to authenticate so LoginSerializer can return
+# "This account has been deactivated." instead of the generic invalid-credentials message.
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.AllowAllUsersModelBackend"]
+
 # Django REST Framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

@@ -93,6 +93,8 @@ Return download URL (Django file serving endpoint)
         │
         ▼
 Browser initiates download of .zip file
+
+**Note:** Exports >1MB use StreamingHttpResponse with Content-Length header for download progress.
 ```
 
 ### Preview Flow

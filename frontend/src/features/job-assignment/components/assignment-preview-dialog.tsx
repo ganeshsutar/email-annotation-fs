@@ -52,7 +52,7 @@ export function AssignmentPreviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg" data-testid="assignment-preview-dialog">
         <DialogHeader>
           <DialogTitle>Round-Robin Preview</DialogTitle>
           <DialogDescription>
@@ -84,10 +84,10 @@ export function AssignmentPreviewDialog({
           </TableBody>
         </Table>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button data-testid="assignment-preview-cancel" variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleConfirm} disabled={assignBulk.isPending}>
+          <Button data-testid="assignment-preview-confirm" onClick={handleConfirm} disabled={assignBulk.isPending}>
             {assignBulk.isPending ? "Assigning..." : "Confirm Assignment"}
           </Button>
         </DialogFooter>

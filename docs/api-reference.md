@@ -164,6 +164,16 @@ Custom URL patterns. All endpoints require `IsAuthenticated + IsAdmin`.
 |--------|----------|-------------|
 | GET | `/api/settings/blind-review/` | Get blind review toggle value |
 | PUT | `/api/settings/blind-review/` | Update blind review toggle. Body: `{ enabled: true\|false }` |
+| GET | `/api/settings/min-annotation-length/` | Get minimum annotation length (default: 1). Returns `{ min_length: number }` |
+| PUT | `/api/settings/min-annotation-length/` | Update minimum annotation length. Body: `{ min_length: number }` |
+
+---
+
+## Health Check (`/api/health/`)
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/health/` | AllowAny | Returns `{ "status": "ok" }` |
 
 ---
 

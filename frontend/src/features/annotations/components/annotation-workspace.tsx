@@ -108,6 +108,7 @@ export function AnnotationWorkspace({ jobId }: AnnotationWorkspaceProps) {
               size="sm"
               onClick={workspace.saveDraft}
               disabled={!workspace.isDirty || workspace.isSaving}
+              data-testid="save-draft-button"
             >
               <Save className="mr-1 h-4 w-4" />
               {workspace.isSaving ? "Saving..." : "Save Draft"}
@@ -116,6 +117,7 @@ export function AnnotationWorkspace({ jobId }: AnnotationWorkspaceProps) {
               size="sm"
               onClick={() => setConfirmSubmitOpen(true)}
               disabled={workspace.isSubmitting || workspace.annotations.length === 0}
+              data-testid="submit-button"
             >
               <Send className="mr-1 h-4 w-4" />
               Submit for QA
@@ -205,7 +207,7 @@ export function AnnotationWorkspace({ jobId }: AnnotationWorkspaceProps) {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col" data-testid="annotation-workspace">
       {/* Rework banner */}
       {workspace.reworkInfo && (
         <div className="px-4 pt-2">
@@ -249,16 +251,17 @@ export function AnnotationWorkspace({ jobId }: AnnotationWorkspaceProps) {
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={40} minSize={25}>
+            <div data-testid="workspace-right-panel" className="h-full">
             <Tabs
               value={workspace.activeRightTab}
               onValueChange={workspace.setActiveRightTab}
               className="flex h-full flex-col"
             >
               <TabsList className="mx-2 mt-2 w-fit">
-                <TabsTrigger value="annotations">
+                <TabsTrigger value="annotations" data-testid="annotations-list-tab">
                   Annotations ({workspace.annotations.length})
                 </TabsTrigger>
-                <TabsTrigger value="email">Email</TabsTrigger>
+                <TabsTrigger value="email" data-testid="email-preview-tab">Email</TabsTrigger>
                 <TabsTrigger value="preview">Preview</TabsTrigger>
               </TabsList>
               <TabsContent value="annotations" className="flex-1 min-h-0 m-0">
@@ -281,6 +284,7 @@ export function AnnotationWorkspace({ jobId }: AnnotationWorkspaceProps) {
                 )}
               </TabsContent>
             </Tabs>
+            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -359,7 +363,7 @@ export function AnnotationWorkspace({ jobId }: AnnotationWorkspaceProps) {
 
       {/* Submit confirmation */}
       <Dialog open={confirmSubmitOpen} onOpenChange={setConfirmSubmitOpen}>
-        <DialogContent>
+        <DialogContent data-testid="submit-confirm-dialog">
           <DialogHeader>
             <DialogTitle>Submit Annotations for QA?</DialogTitle>
             <DialogDescription>
@@ -369,10 +373,10 @@ export function AnnotationWorkspace({ jobId }: AnnotationWorkspaceProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmSubmitOpen(false)}>
+            <Button variant="outline" onClick={() => setConfirmSubmitOpen(false)} data-testid="submit-cancel">
               Cancel
             </Button>
-            <Button onClick={handleSubmit} disabled={workspace.isSubmitting}>
+            <Button onClick={handleSubmit} disabled={workspace.isSubmitting} data-testid="submit-confirm">
               {workspace.isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </DialogFooter>

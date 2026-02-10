@@ -45,6 +45,13 @@ class CreateAnnotationClassSerializer(serializers.Serializer):
             )
         return value
 
+    def validate_display_label(self, value):
+        if AnnotationClass.objects.filter(display_label=value, is_deleted=False).exists():
+            raise serializers.ValidationError(
+                "An annotation class with this display label already exists."
+            )
+        return value
+
     def validate_color(self, value):
         if not re.match(r"^#[0-9a-fA-F]{6}$", value):
             raise serializers.ValidationError("Color must be in #RRGGBB format.")

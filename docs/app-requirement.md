@@ -19,8 +19,9 @@ A web-based platform for annotating Personally Identifiable Information (PII) in
 1. Admin uploads a `.zip` archive containing `.eml` files
 2. System extracts and validates each `.eml` file
 3. Each `.eml` file becomes a **job** (unit of work)
-4. Jobs are grouped under the dataset they were uploaded from
-5. Admin can view the dataset with list of all jobs and their statuses
+4. System deduplicates: skips duplicates within the archive (same content hash) and files already existing in the database (global dedup). Duplicate count is tracked on the dataset.
+5. Jobs are grouped under the dataset they were uploaded from
+6. Admin can view the dataset with list of all jobs and their statuses
 
 ### 3.2 Job Assignment (Admin)
 
@@ -142,6 +143,7 @@ UPLOADED → ASSIGNED_ANNOTATOR → ANNOTATION_IN_PROGRESS → SUBMITTED_FOR_QA
 | A-8 | Export | Export delivered (QA-accepted) jobs as de-identified `.eml` files |
 | A-9 | Blind review toggle | Configure whether QA users can see annotator identity |
 | A-10 | Version audit | View full version history (annotation + QA) for any job, with diffs between versions |
+| A-11 | Min annotation length setting | Configure minimum character length for annotation spans |
 
 ### 6.2 Annotator Features
 
@@ -233,10 +235,10 @@ A read-only, parsed view of the `.eml` file available to **all roles** (Admin, A
 - id (UUID PK), name, email (unique, used as USERNAME_FIELD), role (ADMIN | QA | ANNOTATOR), status (ACTIVE | INACTIVE), force_password_change (boolean), created_at, updated_at
 
 ### Dataset
-- id (UUID PK), name, uploaded_by (User FK), upload_date, file_count, status (UPLOADING | EXTRACTING | READY | FAILED), file_path, error_message
+- id (UUID PK), name, uploaded_by (User FK), upload_date, file_count, duplicate_count, status (UPLOADING | EXTRACTING | READY | FAILED), error_message
 
 ### Job
-- id (UUID PK), dataset (Dataset FK), file_name, file_path, status (UPLOADED | ASSIGNED_ANNOTATOR | ANNOTATION_IN_PROGRESS | SUBMITTED_FOR_QA | ASSIGNED_QA | QA_IN_PROGRESS | QA_ACCEPTED | QA_REJECTED | DELIVERED), assigned_annotator (nullable User FK), assigned_qa (nullable User FK), created_at, updated_at
+- id (UUID PK), dataset (Dataset FK), file_name, eml_content_compressed (BinaryField — zlib), content_hash (SHA-256, indexed), status (UPLOADED | ASSIGNED_ANNOTATOR | ANNOTATION_IN_PROGRESS | SUBMITTED_FOR_QA | ASSIGNED_QA | QA_IN_PROGRESS | QA_ACCEPTED | QA_REJECTED | DELIVERED), assigned_annotator (nullable User FK), assigned_qa (nullable User FK), created_at, updated_at
 
 ### AnnotationClass
 - id (UUID PK), name, display_label, color, description, created_by (User FK), is_deleted (soft-delete flag), created_at

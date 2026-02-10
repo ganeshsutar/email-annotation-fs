@@ -37,7 +37,7 @@ export function DeactivationConfirmDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent data-testid="deactivation-dialog">
         <AlertDialogHeader>
           <AlertDialogTitle>Deactivate {user?.name}?</AlertDialogTitle>
           <AlertDialogDescription>
@@ -46,18 +46,19 @@ export function DeactivationConfirmDialog({
               <>
                 {" "}
                 They have{" "}
-                <strong>{jobImpact.total} assigned job(s)</strong> that
+                <strong data-testid="deactivation-job-impact">{jobImpact.total} assigned job(s)</strong> that
                 will be unassigned.
               </>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel data-testid="deactivation-cancel">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             disabled={deactivateUser.isPending}
+            data-testid="deactivation-confirm"
           >
             {deactivateUser.isPending ? "Deactivating..." : "Deactivate"}
           </AlertDialogAction>

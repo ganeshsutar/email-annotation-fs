@@ -36,7 +36,7 @@ export function DeleteConfirmDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent data-testid="class-delete-dialog">
         <AlertDialogHeader>
           <AlertDialogTitle>
             Delete &ldquo;{annotationClass?.displayLabel}&rdquo;?
@@ -46,20 +46,25 @@ export function DeleteConfirmDialog({
               <>
                 This class is used in{" "}
                 <strong>
-                  {usage.annotationCount} annotation
+                  <span data-testid="class-usage-count">{usage.annotationCount}</span> annotation
                   {usage.annotationCount !== 1 ? "s" : ""}
                 </strong>
                 . Existing annotations will keep their class name, but this
                 class will no longer be available for new annotations.
               </>
             ) : (
-              "This annotation class will be removed from the available options."
+              <>
+                This annotation class is used in{" "}
+                <span data-testid="class-usage-count">0</span> annotations and
+                will be removed from the available options.
+              </>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel data-testid="class-delete-cancel">Cancel</AlertDialogCancel>
           <AlertDialogAction
+            data-testid="class-delete-confirm"
             onClick={handleConfirm}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             disabled={deleteClass.isPending}

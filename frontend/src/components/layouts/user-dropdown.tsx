@@ -72,7 +72,7 @@ export function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-md p-1.5 hover:bg-accent">
+        <button className="flex items-center gap-2 rounded-md p-1.5 hover:bg-accent" data-testid="user-menu-trigger">
           <Avatar className="h-8 w-8">
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
@@ -217,7 +217,7 @@ export function UserDropdown() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={handleLogout}>
+        <DropdownMenuItem onSelect={handleLogout} data-testid="sign-out-button">
           <LogOut className="mr-2 h-4 w-4" />
           Log Out
         </DropdownMenuItem>

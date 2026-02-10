@@ -83,12 +83,12 @@ class JobForAnnotationSerializer(serializers.Serializer):
         return []
 
     def get_rework_info(self, obj):
-        if obj.status != "QA_REJECTED":
+        if obj.status not in ("QA_REJECTED", "ANNOTATION_IN_PROGRESS"):
             return None
         latest_review = (
             obj.qa_reviews.order_by("-version_number").first()
         )
-        if not latest_review:
+        if not latest_review or latest_review.decision != "REJECT":
             return None
         return {
             "comments": latest_review.comments,
@@ -164,12 +164,12 @@ class MyAnnotationJobsSerializer(serializers.Serializer):
         return 0
 
     def get_rework_info(self, obj):
-        if obj.status != "QA_REJECTED":
+        if obj.status not in ("QA_REJECTED", "ANNOTATION_IN_PROGRESS"):
             return None
         latest_review = (
             obj.qa_reviews.order_by("-version_number").first()
         )
-        if not latest_review:
+        if not latest_review or latest_review.decision != "REJECT":
             return None
         return {
             "comments": latest_review.comments,

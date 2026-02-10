@@ -88,6 +88,7 @@ export function AssignmentControlsPanel({
       </CardHeader>
       <CardContent className="space-y-4">
         <RadioGroup
+          data-testid="assignment-strategy-select"
           value={strategy}
           onValueChange={(v) => setStrategy(v as "manual" | "round-robin")}
         >
@@ -106,7 +107,7 @@ export function AssignmentControlsPanel({
             <div className="space-y-2">
               <Label>Assign to</Label>
               <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-                <SelectTrigger>
+                <SelectTrigger data-testid="assignee-select">
                   <SelectValue placeholder="Select user..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -119,6 +120,7 @@ export function AssignmentControlsPanel({
               </Select>
             </div>
             <Button
+              data-testid="assign-button"
               onClick={handleManualAssign}
               disabled={
                 !selectedUserId ||
@@ -139,6 +141,7 @@ export function AssignmentControlsPanel({
               {users.map((user) => (
                 <div key={user.id} className="flex items-center space-x-2">
                   <Checkbox
+                    data-testid="rr-user-checkbox"
                     id={`rr-user-${user.id}`}
                     checked={roundRobinUserIds.has(user.id)}
                     onCheckedChange={(checked) =>
@@ -158,6 +161,7 @@ export function AssignmentControlsPanel({
               ))}
             </div>
             <Button
+              data-testid="round-robin-preview-button"
               onClick={handlePreviewRoundRobin}
               disabled={roundRobinUserIds.size === 0 || selectedCount === 0}
               className="w-full"

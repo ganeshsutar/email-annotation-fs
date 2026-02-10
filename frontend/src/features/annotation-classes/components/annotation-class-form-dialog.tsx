@@ -140,7 +140,7 @@ function AnnotationClassFormContent({
   }
 
   return (
-    <DialogContent className="max-w-md">
+    <DialogContent className="max-w-md" data-testid="class-form-dialog">
       <DialogHeader>
         <DialogTitle>
           {isEdit ? "Edit Annotation Class" : "Create Annotation Class"}
@@ -153,7 +153,7 @@ function AnnotationClassFormContent({
       </DialogHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" data-testid="class-form-error">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -165,6 +165,7 @@ function AnnotationClassFormContent({
             onChange={(e) => handleLabelChange(e.target.value)}
             placeholder="e.g. First Name (Person)"
             autoFocus
+            data-testid="class-label-input"
           />
         </div>
         <div className="space-y-2">
@@ -176,6 +177,7 @@ function AnnotationClassFormContent({
             placeholder="e.g. first_name_person"
             disabled={isEdit}
             className="font-mono"
+            data-testid="class-name-input"
           />
           {name && (
             <p className="text-xs text-muted-foreground">
@@ -207,6 +209,7 @@ function AnnotationClassFormContent({
               value={customColor || (PRESET_COLORS.includes(color) ? "" : color)}
               onChange={(e) => handleCustomColorChange(e.target.value)}
               className="max-w-[120px] font-mono"
+              data-testid="class-color-input"
             />
             <span
               className="h-8 w-8 rounded border"
@@ -222,6 +225,7 @@ function AnnotationClassFormContent({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional description..."
             rows={2}
+            data-testid="class-description-input"
           />
         </div>
         <DialogFooter>
@@ -229,10 +233,11 @@ function AnnotationClassFormContent({
             type="button"
             variant="outline"
             onClick={() => onOpenChange(false)}
+            data-testid="class-form-cancel"
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isDisabled}>
+          <Button type="submit" disabled={isDisabled} data-testid="class-form-submit">
             {isLoading
               ? "Saving..."
               : isEdit

@@ -54,7 +54,7 @@ export function DatasetDeleteConfirmDialog({
         onOpenChange(val);
       }}
     >
-      <AlertDialogContent>
+      <AlertDialogContent data-testid="dataset-delete-dialog">
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Dataset</AlertDialogTitle>
           <AlertDialogDescription>
@@ -71,16 +71,18 @@ export function DatasetDeleteConfirmDialog({
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
             placeholder="Dataset name"
+            data-testid="dataset-delete-confirm-input"
           />
         </div>
         <AlertDialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} data-testid="dataset-delete-cancel">
             Cancel
           </Button>
           <Button
             variant="destructive"
             onClick={handleDelete}
             disabled={!canConfirm || deleteDataset.isPending}
+            data-testid="dataset-delete-confirm"
           >
             {deleteDataset.isPending ? "Deleting..." : "Delete Dataset"}
           </Button>

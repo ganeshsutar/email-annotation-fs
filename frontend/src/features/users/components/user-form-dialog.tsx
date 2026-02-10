@@ -98,7 +98,7 @@ function UserFormDialogContent({
 
   if (tempPassword) {
     return (
-      <DialogContent>
+      <DialogContent data-testid="user-form-dialog">
         <DialogHeader>
           <DialogTitle>User Created</DialogTitle>
           <DialogDescription>
@@ -109,7 +109,7 @@ function UserFormDialogContent({
         <div className="space-y-2">
           <Label>Temporary Password</Label>
           <div className="flex items-center gap-2">
-            <code className="flex-1 rounded bg-muted px-3 py-2 font-mono text-sm">
+            <code className="flex-1 rounded bg-muted px-3 py-2 font-mono text-sm" data-testid="temp-password-display">
               {tempPassword}
             </code>
             <CopyButton text={tempPassword} />
@@ -123,7 +123,7 @@ function UserFormDialogContent({
   }
 
   return (
-    <DialogContent>
+    <DialogContent data-testid="user-form-dialog">
       <DialogHeader>
         <DialogTitle>{isEdit ? "Edit User" : "Create User"}</DialogTitle>
         <DialogDescription>
@@ -134,7 +134,7 @@ function UserFormDialogContent({
       </DialogHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" data-testid="user-form-error">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -145,6 +145,7 @@ function UserFormDialogContent({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Full name"
+            data-testid="user-name-input"
           />
         </div>
         <div className="space-y-2">
@@ -156,11 +157,12 @@ function UserFormDialogContent({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="user@example.com"
             disabled={isEdit}
+            data-testid="user-email-input"
           />
         </div>
         <div className="space-y-2">
           <Label>Role</Label>
-          <RadioGroup value={role} onValueChange={setRole}>
+          <RadioGroup value={role} onValueChange={setRole} data-testid="user-role-select">
             <div className="flex items-center space-x-2">
               <RadioGroupItem value={UserRole.ADMIN} id="role-admin" />
               <Label htmlFor="role-admin">Admin</Label>
@@ -186,6 +188,7 @@ function UserFormDialogContent({
                 variant="link"
                 className="text-destructive px-0"
                 onClick={() => onDeactivate(user)}
+                data-testid="user-deactivate-button"
               >
                 Deactivate User
               </Button>
@@ -196,6 +199,7 @@ function UserFormDialogContent({
                 variant="link"
                 className="px-0"
                 onClick={() => onActivate(user)}
+                data-testid="user-activate-button"
               >
                 Activate User
               </Button>
@@ -206,10 +210,11 @@ function UserFormDialogContent({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              data-testid="user-form-cancel"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isDisabled}>
+            <Button type="submit" disabled={isDisabled} data-testid="user-form-submit">
               {isLoading
                 ? "Saving..."
                 : isEdit

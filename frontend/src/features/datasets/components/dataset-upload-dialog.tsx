@@ -127,7 +127,7 @@ function DatasetUploadDialogContent({
             <strong>{fileCount}</strong> email files extracted from{" "}
             <strong>{name}</strong>
             {duplicateCount > 0 && (
-              <>, <strong>{duplicateCount}</strong> duplicate(s) skipped</>
+              <>, <strong data-testid="dataset-duplicate-count">{duplicateCount}</strong> duplicate(s) skipped</>
             )}
           </p>
         </div>
@@ -149,7 +149,7 @@ function DatasetUploadDialogContent({
         </DialogHeader>
         <div className="flex flex-col items-center gap-3 py-4">
           <XCircle className="h-12 w-12 text-red-500" />
-          <p className="text-sm text-destructive">{error}</p>
+          <p className="text-sm text-destructive" data-testid="upload-error">{error}</p>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
@@ -163,7 +163,7 @@ function DatasetUploadDialogContent({
   const isProcessing = stage === "uploading" || stage === "extracting";
 
   return (
-    <DialogContent>
+    <DialogContent data-testid="upload-dialog">
       <DialogHeader>
         <DialogTitle>Upload Dataset</DialogTitle>
         <DialogDescription>
@@ -179,6 +179,7 @@ function DatasetUploadDialogContent({
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Batch 2024-01"
             disabled={isProcessing}
+            data-testid="dataset-name-input"
           />
         </div>
         <div className="space-y-2">
@@ -216,10 +217,11 @@ function DatasetUploadDialogContent({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={isProcessing}
+            data-testid="upload-cancel"
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={!name || !file || isProcessing}>
+          <Button type="submit" disabled={!name || !file || isProcessing} data-testid="upload-submit">
             {isProcessing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

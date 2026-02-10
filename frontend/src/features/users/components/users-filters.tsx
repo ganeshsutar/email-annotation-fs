@@ -42,9 +42,10 @@ export function UsersFilters({
         value={localSearch}
         onChange={(e) => setLocalSearch(e.target.value)}
         className="max-w-sm"
+        data-testid="users-search"
       />
       <Select value={role} onValueChange={onRoleChange}>
-        <SelectTrigger className="w-[150px]">
+        <SelectTrigger className="w-[150px]" data-testid="users-role-filter">
           <SelectValue placeholder="All Roles" />
         </SelectTrigger>
         <SelectContent>
@@ -55,7 +56,7 @@ export function UsersFilters({
         </SelectContent>
       </Select>
       <Select value={status} onValueChange={onStatusChange}>
-        <SelectTrigger className="w-[150px]">
+        <SelectTrigger className="w-[150px]" data-testid="users-status-filter">
           <SelectValue placeholder="All Statuses" />
         </SelectTrigger>
         <SelectContent>

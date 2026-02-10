@@ -1,15 +1,9 @@
-import { useMemo, useState, useEffect, useRef } from "react";
-import DOMPurify from "dompurify";
-import {
-  parseEml,
-  buildCidMap,
-  replaceCidReferences,
-} from "@/lib/eml-parser";
+import { useMemo, useState } from "react";
 import type { WorkspaceAnnotation } from "@/types/models";
 import { deidentify } from "@/lib/deidentify";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { EmailViewer, AttachmentsList } from "@/components/email-viewer";
+import { EmailViewer } from "@/components/email-viewer";
 
 interface EmailPreviewProps {
   rawContent: string;
@@ -62,54 +56,10 @@ export function EmailPreview({ rawContent, annotations }: EmailPreviewProps) {
 
 /** Original preview — used when no annotations are present */
 function OriginalEmailPreview({ rawContent }: { rawContent: string }) {
-  const email = useMemo(() => parseEml(rawContent), [rawContent]);
-  const cidMapRef = useRef<{ cleanup: () => void } | null>(null);
-
-  const iframeSrcDoc = useMemo(() => {
-    if (!email.htmlBody) return null;
-
-    const cidMap = buildCidMap(email.attachments);
-    // Cleanup previous blob URLs
-    cidMapRef.current?.cleanup();
-    cidMapRef.current = cidMap;
-
-    const withCids = replaceCidReferences(email.htmlBody, cidMap.urls);
-    return DOMPurify.sanitize(withCids, {
-      USE_PROFILES: { html: true },
-      ADD_TAGS: ["style"],
-      WHOLE_DOCUMENT: true,
-      ALLOWED_URI_REGEXP: /^(?:blob:|data:|https?:|mailto:)/i,
-    });
-  }, [email.htmlBody, email.attachments]);
-
-  useEffect(() => {
-    return () => {
-      cidMapRef.current?.cleanup();
-      cidMapRef.current = null;
-    };
-  }, []);
-
-  if (iframeSrcDoc) {
-    return (
-      <div className="flex flex-col h-full">
-        <iframe
-          srcDoc={iframeSrcDoc}
-          sandbox="allow-same-origin"
-          className="w-full flex-1 border-0 min-h-[400px]"
-          title="Email preview"
-        />
-        <div className="px-4 pb-4">
-          <AttachmentsList attachments={email.attachments} />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="p-4">
-      <pre className="whitespace-pre-wrap text-sm font-mono">{email.body}</pre>
-      <AttachmentsList attachments={email.attachments} />
-    </div>
+    <ScrollArea className="h-full">
+      <EmailViewer rawContent={rawContent} />
+    </ScrollArea>
   );
 }
 

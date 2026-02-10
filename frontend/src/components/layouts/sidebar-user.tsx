@@ -80,6 +80,7 @@ export function SidebarUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
+              data-testid="user-menu-trigger"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
@@ -247,7 +248,7 @@ export function SidebarUser() {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onSelect={handleLogout}>
+            <DropdownMenuItem onSelect={handleLogout} data-testid="sign-out-button">
               <LogOut className="mr-2 h-4 w-4" />
               Log Out
             </DropdownMenuItem>

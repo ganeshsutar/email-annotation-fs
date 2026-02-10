@@ -60,7 +60,7 @@ export function BulkReassignDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent data-testid="bulk-reassign-dialog">
         <DialogHeader>
           <DialogTitle>Reassign Jobs</DialogTitle>
           <DialogDescription>
@@ -71,7 +71,7 @@ export function BulkReassignDialog({
         <div className="space-y-2">
           <Label>New Assignee</Label>
           <Select value={newAssigneeId} onValueChange={setNewAssigneeId}>
-            <SelectTrigger>
+            <SelectTrigger data-testid="reassign-user-select">
               <SelectValue placeholder="Select user..." />
             </SelectTrigger>
             <SelectContent>
@@ -88,6 +88,7 @@ export function BulkReassignDialog({
             Cancel
           </Button>
           <Button
+            data-testid="reassign-confirm"
             onClick={handleReassign}
             disabled={!newAssigneeId || reassignJobs.isPending}
           >

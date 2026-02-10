@@ -22,8 +22,9 @@ export function useSubmitAnnotation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: submitAnnotation,
-    onSuccess: () => {
+    onSuccess: (_data, { jobId }) => {
       queryClient.invalidateQueries({ queryKey: ["annotations", "my-jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["annotations", "job", jobId] });
       toast.success("Annotations submitted");
     },
   });

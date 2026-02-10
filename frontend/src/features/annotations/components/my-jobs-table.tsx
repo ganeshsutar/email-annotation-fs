@@ -62,7 +62,7 @@ export function MyJobsTable({ jobs }: MyJobsTableProps) {
   }
 
   return (
-    <Table>
+    <Table data-testid="my-jobs-table">
       <TableHeader>
         <TableRow>
           <TableHead>File Name</TableHead>
@@ -105,6 +105,7 @@ export function MyJobsTable({ jobs }: MyJobsTableProps) {
                     <Button
                       size="sm"
                       variant={action.navigable ? "default" : "outline"}
+                      data-testid="job-annotate-button"
                       onClick={() => {
                         navigate({
                           to: "/annotator/jobs/$jobId/annotate",

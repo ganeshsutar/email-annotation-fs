@@ -33,7 +33,7 @@ export function SameValueLinkingDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onCancel()}>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="sm:max-w-xl" data-testid="same-value-linking-dialog">
         <DialogHeader>
           <DialogTitle>
             {isFuzzy ? "Similar Value Detected" : "Same Value Detected"}
@@ -71,13 +71,13 @@ export function SameValueLinkingDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex flex-wrap gap-2 sm:justify-end">
-          <Button variant="outline" onClick={onCancel}>
+          <Button variant="outline" onClick={onCancel} data-testid="link-cancel">
             Cancel
           </Button>
-          <Button variant="secondary" onClick={onCreateNew}>
+          <Button variant="secondary" onClick={onCreateNew} data-testid="link-new-tag">
             New Tag ({newTag})
           </Button>
-          <Button onClick={onUseExisting}>
+          <Button onClick={onUseExisting} data-testid="link-existing-tag">
             Use Existing ({existingTag})
           </Button>
         </DialogFooter>

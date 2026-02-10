@@ -255,8 +255,8 @@ src/app/routes/
 | Task | Key Files |
 |------|-----------|
 | Defined custom `User` model (UUID PK, email-based auth, role enum, status enum, force_password_change) | `backend/accounts/models.py` |
-| Defined `Dataset` model (UUID PK, name, uploaded_by FK, upload_date, file_count, status enum, file_path, error_message) | `backend/datasets/models.py` |
-| Defined `Job` model (UUID PK, dataset FK, file_name, file_path, status enum, assigned_annotator FK, assigned_qa FK) | `backend/datasets/models.py` |
+| Defined `Dataset` model (UUID PK, name, uploaded_by FK, upload_date, file_count, duplicate_count, status enum, error_message) | `backend/datasets/models.py` |
+| Defined `Job` model (UUID PK, dataset FK, file_name, eml_content_compressed, content_hash, status enum, assigned_annotator FK, assigned_qa FK) | `backend/datasets/models.py` |
 | Defined `AnnotationClass` model (UUID PK, name, display_label, color, description, created_by FK, is_deleted soft-delete flag) | `backend/core/models.py` |
 | Defined `PlatformSetting` model (UUID PK, key unique, value) — for blind review toggle | `backend/core/models.py` |
 | Defined `AnnotationVersion` model (UUID PK, job FK, version_number, created_by FK, source enum) | `backend/annotations/models.py` |
@@ -267,6 +267,9 @@ src/app/routes/
 | Defined `ExportRecord` model (UUID PK, dataset FK, job_ids JSON, file_size, file_path, exported_by FK) | `backend/exports/models.py` |
 | Configured DRF authentication and permission classes | `backend/config/settings.py` |
 | Added RBAC permission classes: IsAdmin, IsAnnotator, IsQA, IsAdminOrAnnotator, IsAdminOrQA, IsAnyRole | `backend/core/permissions.py` |
+
+**Implementation Note — Storage evolution:**
+Job storage migrated from file-system (`file_path`) to in-database compressed storage (`eml_content_compressed` BinaryField with zlib) via migrations 0002–0007. Deduplication via `content_hash` (SHA-256) added in migration 0008 with two-phase dedup (intra-ZIP + global). `Dataset.duplicate_count` tracks skipped duplicates.
 
 ### 0.5 Django Auth Configuration
 
@@ -627,6 +630,7 @@ src/app/routes/
 | Task | Key Files |
 |------|-----------|
 | Created settings views — GET/PUT blind review toggle via PlatformSetting | `backend/core/settings_views.py` |
+| Created min-annotation-length setting — GET/PUT with configurable minimum | `backend/core/settings_views.py`, `backend/core/settings_urls.py` |
 | Defined settings URL routes | `backend/core/settings_urls.py` |
 
 **UI screens covered:** `docs/ui/admin-dashboard.md`
@@ -681,6 +685,27 @@ src/app/routes/
 | Added `expected_status` parameter for optimistic locking on 5 job transition endpoints | `backend/datasets/views.py`, `backend/annotations/views.py`, `backend/qa/views.py` |
 | Custom DRF exception handler with structured error responses | `backend/config/settings.py` |
 | Configured Django LOGGING for structured backend logging | `backend/config/settings.py` |
+
+---
+
+## Post-Phase — E2E Testing [COMPLETED]
+
+> Added after Phase 5. Playwright-based end-to-end tests for critical user flows.
+
+### Setup
+
+| Task | Key Files |
+|------|-----------|
+| Configured Playwright with Chromium | `frontend/playwright.config.ts` |
+| Created E2E config for test credentials (gitignored) | `frontend/e2e/config.example.ts`, `frontend/e2e/config.ts` |
+| Created auth fixtures — `loginViaUI()`, `getCredentials()`, `TestRole`, `ROLE_DASHBOARDS` | `frontend/e2e/fixtures/auth.ts` |
+| Separated E2E types from app build | `frontend/tsconfig.e2e.json` |
+
+### Tests
+
+| Test File | Coverage |
+|-----------|----------|
+| `frontend/e2e/tests/login.spec.ts` | Login form rendering, invalid credentials, button states, role-based login + redirect |
 
 ---
 

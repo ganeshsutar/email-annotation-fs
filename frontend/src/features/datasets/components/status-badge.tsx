@@ -81,7 +81,11 @@ export function StatusBadge({ status, type = "job" }: StatusBadgeProps) {
   }
 
   return (
-    <Badge variant="outline" className={`transition-colors duration-200 ${config.className}`}>
+    <Badge
+      variant="outline"
+      className={`transition-colors duration-200 ${config.className}`}
+      {...(type === "dataset" ? { "data-testid": "dataset-status" } : {})}
+    >
       {config.label}
     </Badge>
   );

@@ -23,7 +23,7 @@ export function AnnotationClassesTable({
   onDelete,
 }: AnnotationClassesTableProps) {
   return (
-    <div className="border rounded-lg">
+    <div className="border rounded-lg" data-testid="annotation-classes-table">
       <Table>
         <TableHeader>
           <TableRow>
@@ -52,6 +52,7 @@ export function AnnotationClassesTable({
                   <span
                     className="inline-block h-5 w-5 rounded border align-middle"
                     style={{ backgroundColor: cls.color }}
+                    data-testid="class-color-swatch"
                   />
                 </TableCell>
                 <TableCell className="font-medium">{cls.displayLabel}</TableCell>
@@ -67,6 +68,7 @@ export function AnnotationClassesTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onEdit(cls)}
+                      data-testid="class-edit-button"
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -74,6 +76,7 @@ export function AnnotationClassesTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onDelete(cls)}
+                      data-testid="class-delete-button"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

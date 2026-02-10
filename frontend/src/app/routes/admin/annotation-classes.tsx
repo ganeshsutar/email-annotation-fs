@@ -39,10 +39,10 @@ function AnnotationClassesPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="annotation-classes-page">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight lg:text-2xl">Annotation Classes</h1>
-        <Button onClick={handleCreate}>
+        <Button onClick={handleCreate} data-testid="add-class-button">
           <Plus className="mr-2 h-4 w-4" />
           Create Class
         </Button>

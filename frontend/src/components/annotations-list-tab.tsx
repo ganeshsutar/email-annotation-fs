@@ -60,8 +60,9 @@ export function AnnotationsListTab({
                   key={ann.id}
                   className="cursor-pointer hover:bg-muted/50"
                   onClick={() => onAnnotationClick(ann.id)}
+                  data-testid="annotation-list-item"
                 >
-                  <TableCell className="font-mono text-xs">
+                  <TableCell className="font-mono text-xs" data-testid="annotation-tag">
                     {ann.tag}
                   </TableCell>
                   <TableCell>
@@ -105,6 +106,7 @@ export function AnnotationsListTab({
                           variant="ghost"
                           size="icon"
                           className="h-6 w-6 text-destructive hover:text-destructive"
+                          data-testid="annotation-delete-button"
                           onClick={(e) => {
                             e.stopPropagation();
                             onDelete?.(ann.id);

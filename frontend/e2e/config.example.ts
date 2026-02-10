@@ -5,4 +5,5 @@ export const testUsers = {
   admin: { email: "admin@test.com", password: "YourPassword" },
   annotator: { email: "annotator@test.com", password: "YourPassword" },
   qa: { email: "qa@test.com", password: "YourPassword" },
+  deactivated: { email: "deactivated@test.com", password: "YourPassword" },
 };

@@ -72,10 +72,10 @@ function UsersPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="users-page">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight lg:text-2xl">Users</h1>
-        <Button onClick={handleCreate}>
+        <Button onClick={handleCreate} data-testid="add-user-button">
           <Plus className="mr-2 h-4 w-4" />
           Create User
         </Button>
@@ -99,16 +99,18 @@ function UsersPage() {
           <div className="rounded-lg border">
             <UsersTable users={data?.results ?? []} onEdit={handleEdit} />
           </div>
-          <DataTablePagination
-            page={page}
-            pageSize={pageSize}
-            totalCount={data?.count ?? 0}
-            onPageChange={setPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setPage(1);
-            }}
-          />
+          <div data-testid="users-pagination">
+            <DataTablePagination
+              page={page}
+              pageSize={pageSize}
+              totalCount={data?.count ?? 0}
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
         </>
       )}
 

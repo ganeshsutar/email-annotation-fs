@@ -16,7 +16,7 @@ export function ReworkBanner({ reworkInfo }: ReworkBannerProps) {
   const reviewDate = new Date(reworkInfo.reviewedAt).toLocaleString();
 
   return (
-    <Alert className="border-yellow-500/50 bg-yellow-50 dark:bg-yellow-950/20">
+    <Alert className="border-yellow-500/50 bg-yellow-50 dark:bg-yellow-950/20" data-testid="rework-banner">
       <AlertTriangle className="h-4 w-4 text-yellow-600" />
       <AlertTitle className="flex items-center justify-between">
         <span>QA Rejected — Rework Required</span>
@@ -30,7 +30,7 @@ export function ReworkBanner({ reworkInfo }: ReworkBannerProps) {
         </Button>
       </AlertTitle>
       <AlertDescription className="mt-1 space-y-1">
-        <p className="text-sm">{reworkInfo.comments}</p>
+        <p className="text-sm" data-testid="rejection-comments">{reworkInfo.comments}</p>
         <p className="text-xs text-muted-foreground">
           {reworkInfo.reviewerName && <>Reviewed by {reworkInfo.reviewerName} &middot; </>}
           {reviewDate}

@@ -164,21 +164,21 @@ function JobAssignmentPage() {
   const datasets = datasetsData?.results ?? [];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="job-assignment-page">
       <h1 className="text-2xl font-bold">Job Assignment</h1>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList>
-          <TabsTrigger value="ANNOTATION">Annotation Assignment</TabsTrigger>
-          <TabsTrigger value="QA">QA Assignment</TabsTrigger>
+          <TabsTrigger value="ANNOTATION" data-testid="annotation-assignment-tab">Annotation Assignment</TabsTrigger>
+          <TabsTrigger value="QA" data-testid="qa-assignment-tab">QA Assignment</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-4 space-y-4">
           <Tabs value={subTab} onValueChange={handleSubTabChange}>
             <TabsList>
-              <TabsTrigger value="unassigned">Unassigned</TabsTrigger>
-              <TabsTrigger value="assigned">Assigned</TabsTrigger>
-              <TabsTrigger value="in-progress">In Progress</TabsTrigger>
+              <TabsTrigger value="unassigned" data-testid="unassigned-subtab">Unassigned</TabsTrigger>
+              <TabsTrigger value="assigned" data-testid="assigned-subtab">Assigned</TabsTrigger>
+              <TabsTrigger value="in-progress" data-testid="in-progress-subtab">In Progress</TabsTrigger>
             </TabsList>
 
             <TabsContent value="unassigned" className="mt-4">
@@ -265,6 +265,7 @@ function JobAssignmentPage() {
                   </Select>
                   <div className="flex-1" />
                   <Button
+                    data-testid="reassign-button"
                     disabled={assignedSelectedIds.size === 0}
                     onClick={() => setReassignOpen(true)}
                   >
@@ -319,6 +320,7 @@ function JobAssignmentPage() {
                   </Select>
                   <div className="flex-1" />
                   <Button
+                    data-testid="reassign-button"
                     disabled={inProgressSelectedIds.size === 0}
                     onClick={() => setInProgressReassignOpen(true)}
                   >

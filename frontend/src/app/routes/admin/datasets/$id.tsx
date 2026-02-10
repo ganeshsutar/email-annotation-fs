@@ -134,7 +134,7 @@ function DatasetDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="dataset-detail-page">
       <div>
         <Link
           to="/admin/datasets"
@@ -170,6 +170,7 @@ function DatasetDetailPage() {
           value={localSearch}
           onChange={(e) => setLocalSearch(e.target.value)}
           className="max-w-sm"
+          data-testid="dataset-jobs-search"
         />
         {statusFilter && (
           <Button
@@ -200,21 +201,23 @@ function DatasetDetailPage() {
               onHistoryClick={handleHistoryClick}
             />
           </div>
-          <DataTablePagination
-            page={page}
-            pageSize={pageSize}
-            totalCount={jobsData?.count ?? 0}
-            onPageChange={setPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setPage(1);
-            }}
-          />
+          <div data-testid="dataset-jobs-pagination">
+            <DataTablePagination
+              page={page}
+              pageSize={pageSize}
+              totalCount={jobsData?.count ?? 0}
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
         </>
       )}
 
       <Dialog open={!!dialogJobId} onOpenChange={handleDialogClose}>
-        <DialogContent className="sm:max-w-4xl max-h-[85vh] flex flex-col">
+        <DialogContent className="sm:max-w-4xl max-h-[85vh] flex flex-col" data-testid="email-viewer-dialog">
           <DialogHeader>
             <DialogTitle>
               {dialogJob?.fileName ?? "Email Preview"}
@@ -235,9 +238,9 @@ function DatasetDetailPage() {
             ) : rawContent ? (
               <Tabs value={dialogTab} onValueChange={setDialogTab}>
                 <TabsList className="w-fit">
-                  <TabsTrigger value="email">Email</TabsTrigger>
-                  <TabsTrigger value="raw">Raw Content</TabsTrigger>
-                  <TabsTrigger value="history">History</TabsTrigger>
+                  <TabsTrigger value="email" data-testid="email-tab">Email</TabsTrigger>
+                  <TabsTrigger value="raw" data-testid="raw-tab">Raw Content</TabsTrigger>
+                  <TabsTrigger value="history" data-testid="history-tab">History</TabsTrigger>
                 </TabsList>
                 <TabsContent value="email">
                   <EmailViewer rawContent={rawContent} />

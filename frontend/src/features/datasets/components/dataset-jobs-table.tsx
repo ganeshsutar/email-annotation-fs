@@ -1,4 +1,4 @@
-import { FileText, History } from "lucide-react";
+import { Eye, FileText, History } from "lucide-react";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -59,7 +59,7 @@ export function DatasetJobsTable({
   }
 
   return (
-    <Table>
+    <Table data-testid="dataset-jobs-table">
       <TableHeader>
         <TableRow>
           <TableHead className="w-[40px]">
@@ -73,7 +73,7 @@ export function DatasetJobsTable({
           <TableHead>Annotator</TableHead>
           <TableHead>QA</TableHead>
           <TableHead>Updated</TableHead>
-          <TableHead className="w-12" />
+          <TableHead className="w-20" />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -116,20 +116,38 @@ export function DatasetJobsTable({
                 {new Date(job.updatedAt).toLocaleDateString()}
               </TableCell>
               <TableCell onClick={(e) => e.stopPropagation()}>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onHistoryClick?.(job.id)}
-                      >
-                        <History className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Version History</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <div className="flex items-center gap-1">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onJobClick?.(job.id)}
+                          data-testid="job-view-button"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>View Email</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onHistoryClick?.(job.id)}
+                          data-testid="job-history-button"
+                        >
+                          <History className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Version History</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </TableCell>
             </TableRow>
           ))

@@ -46,7 +46,7 @@ export function AssignedJobsTable({
   }
 
   return (
-    <div>
+    <div data-testid="assigned-jobs-table">
       <div className="rounded-lg border">
       <Table>
         <TableHeader>
@@ -75,6 +75,7 @@ export function AssignedJobsTable({
               <TableRow key={job.id}>
                 <TableCell>
                   <Checkbox
+                    data-testid="job-checkbox"
                     checked={selectedIds.has(job.id)}
                     onCheckedChange={(checked) =>
                       handleSelectOne(job.id, !!checked)
@@ -96,7 +97,7 @@ export function AssignedJobsTable({
       </Table>
       </div>
       {selectedIds.size > 0 && (
-        <div className="mt-2 text-sm text-muted-foreground">
+        <div data-testid="selected-count" className="mt-2 text-sm text-muted-foreground">
           {selectedIds.size} of {jobs.length} selected
         </div>
       )}

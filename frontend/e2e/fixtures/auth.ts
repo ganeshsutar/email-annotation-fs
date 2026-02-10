@@ -29,9 +29,18 @@ export function getCredentials(role: TestRole) {
   };
 }
 
+export function getDeactivatedCredentials() {
+  return testUsers.deactivated;
+}
+
 export async function loginViaUI(page: Page, email: string, password: string) {
   await page.goto("/login");
   await page.getByTestId("login-email").fill(email);
   await page.getByTestId("login-password").fill(password);
   await page.getByTestId("login-submit").click();
+}
+
+export async function logoutViaUI(page: Page) {
+  await page.getByTestId("user-menu-trigger").click();
+  await page.getByTestId("sign-out-button").click();
 }
