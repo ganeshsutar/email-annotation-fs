@@ -17,7 +17,7 @@ interface ExportHistoryTableProps {
 
 export function ExportHistoryTable({ exports }: ExportHistoryTableProps) {
   return (
-    <div className="border rounded-lg">
+    <div className="border rounded-lg" data-testid="export-history-table">
       <Table>
         <TableHeader>
           <TableRow>
@@ -35,6 +35,7 @@ export function ExportHistoryTable({ exports }: ExportHistoryTableProps) {
               <TableCell
                 colSpan={6}
                 className="text-center text-muted-foreground h-24"
+                data-testid="export-history-empty"
               >
                 No exports yet
               </TableCell>
@@ -57,7 +58,7 @@ export function ExportHistoryTable({ exports }: ExportHistoryTableProps) {
                 <TableCell>{record.exportedBy?.name ?? "—"}</TableCell>
                 <TableCell>
                   <Button variant="ghost" size="icon" asChild>
-                    <a href={record.downloadUrl} download>
+                    <a href={record.downloadUrl} download data-testid="export-download-button">
                       <Download className="h-4 w-4" />
                     </a>
                   </Button>

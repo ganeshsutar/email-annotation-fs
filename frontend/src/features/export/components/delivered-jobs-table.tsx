@@ -42,9 +42,9 @@ export function DeliveredJobsTable({
   }
 
   return (
-    <div>
+    <div data-testid="delivered-jobs-table">
       {selectedIds.size > 0 && (
-        <p className="text-sm text-muted-foreground mb-2">
+        <p className="text-sm text-muted-foreground mb-2" data-testid="export-selected-count">
           {selectedIds.size} of {jobs.length} job(s) selected
         </p>
       )}
@@ -56,6 +56,7 @@ export function DeliveredJobsTable({
                 <Checkbox
                   checked={allSelected ? true : someSelected ? "indeterminate" : false}
                   onCheckedChange={toggleAll}
+                  data-testid="select-all-checkbox"
                 />
               </TableHead>
               <TableHead>File Name</TableHead>
@@ -68,7 +69,7 @@ export function DeliveredJobsTable({
           <TableBody>
             {jobs.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground h-24">
+                <TableCell colSpan={6} className="text-center text-muted-foreground h-24" data-testid="delivered-jobs-empty">
                   No delivered jobs found
                 </TableCell>
               </TableRow>
@@ -79,6 +80,7 @@ export function DeliveredJobsTable({
                     <Checkbox
                       checked={selectedIds.has(job.id)}
                       onCheckedChange={() => toggleOne(job.id)}
+                      data-testid="job-export-checkbox"
                     />
                   </TableCell>
                   <TableCell className="font-medium">{job.fileName}</TableCell>

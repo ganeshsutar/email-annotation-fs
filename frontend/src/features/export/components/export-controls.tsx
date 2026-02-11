@@ -25,6 +25,7 @@ export function ExportControls({
         size="sm"
         disabled={selectedCount !== 1}
         onClick={onPreview}
+        data-testid="preview-button"
       >
         <Eye className="h-4 w-4 mr-1.5" />
         Preview Selected
@@ -33,6 +34,7 @@ export function ExportControls({
         size="sm"
         disabled={selectedCount === 0 || isExporting}
         onClick={onExportSelected}
+        data-testid="export-selected-button"
       >
         {isExporting ? (
           <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
@@ -46,6 +48,7 @@ export function ExportControls({
         size="sm"
         disabled={totalCount === 0 || isExporting}
         onClick={onExportAll}
+        data-testid="export-all-button"
       >
         <Download className="h-4 w-4 mr-1.5" />
         Export All ({totalCount})

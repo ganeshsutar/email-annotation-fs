@@ -79,7 +79,7 @@ function ExportPage() {
   }, [jobs, createExport]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="export-page">
       <div>
         <h1 className="text-xl font-bold tracking-tight lg:text-2xl">
           Export
@@ -102,7 +102,7 @@ function ExportPage() {
             value={selectedDatasetId ?? ""}
             onValueChange={handleDatasetChange}
           >
-            <SelectTrigger className="w-[400px]">
+            <SelectTrigger className="w-[400px]" data-testid="export-dataset-select">
               <SelectValue placeholder="Select a dataset" />
             </SelectTrigger>
             <SelectContent>
@@ -146,7 +146,12 @@ function ExportPage() {
       )}
 
       {/* Preview */}
-      {preview && <ExportPreview data={preview} />}
+      {preview && (
+        <ExportPreview
+          data={preview}
+          onClose={() => setPreviewJobId(null)}
+        />
+      )}
 
       {/* Export History */}
       <Card>
